@@ -1,0 +1,42 @@
+graph TB
+    subgraph Human Interface
+        User[User Prompt / Feedback] <--> Chat[Chat Interface API]
+    end
+
+    subgraph LLM Brain & Planning
+        LLM[Cognitive Routing Engine <br> LLM Brain] <--> Plan[Plan Manager <br> Hierarchical DAG / Task List]
+        LLM <--> Eval[LLM-as-a-Judge <br> State Evaluator]
+    end
+
+    subgraph Memory Subsystems
+        ShortMem[Short-Term Memory <br> Sliding Context Window] <--> LLM
+        Episodic[Episodic Memory <br> Execution Logs & Rollback States] <--> LLM
+        LongMem[Long-Term Memory <br> Vector Cache of Patterns & Docs] <--> LLM
+    end
+
+    subgraph Isolated Execution Sandbox (Docker Container)
+        Terminal[Bash Terminal <br> Actuator & Sensor]
+        Editor[File Editor / Patcher <br> Actuator & Sensor]
+        Browser[Web Browser <br> Playwright / Chromium]
+        Compiler[Compilers, Runtimes & Test Suites]
+    end
+
+    %% Execution Loop Flow
+    User -->|Initiates Task| Chat
+    Chat -->|Sends Context| LLM
+    LLM -->|Consults| Plan
+    Plan -->|Selects Next Action| LLM
+    LLM -->|Invokes Tool Call| Editor
+    LLM -->|Executes Command| Terminal
+    LLM -->|Navigates Web| Browser
+    
+    Terminal -->|Terminal Outputs stdout/stderr| LLM
+    Editor -->|File Diffs & Content| LLM
+    Browser -->|Screenshots & DOM| LLM
+    Compiler -->|Exit Codes & Error Traces| LLM
+
+    LLM -->|Evaluates Execution State| Eval
+    Eval -->|Success: Check off task| Plan
+    Eval -->|Failure: Re-plan / Backtrack| Plan
+    Plan -->|Final Deliverable| Chat
+    Chat -->|Return Result| User

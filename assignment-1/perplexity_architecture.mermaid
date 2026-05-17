@@ -1,0 +1,36 @@
+graph TB
+    subgraph Human Interface
+        User[User Query] --> Parser[Semantic Query Parser]
+        Synthesizer[Response Synthesizer] -->|Detailed Answer with Citations| User
+    end
+
+    subgraph LLM Planner & Router
+        Router[Search Query Router] <--> Plan[Multi-Hop Planner]
+        RePlan[Gap Detector & Re-planner] <--> Router
+    end
+
+    subgraph External Tools & Sensors
+        SearchAPI[Search Index APIs <br> Google / Bing]
+        Scraper[Web Crawler & Scraper]
+        Interpreter[Python Code Interpreter <br> Wolfram Alpha API]
+    end
+
+    subgraph Memory & Context Cache
+        Episodic[Episodic Memory <br> Visited URLs & Extracted Snippets]
+        Context[Short-Term Context <br> Conversation History]
+    end
+
+    %% Flow
+    Parser -->|Context & Intent| Router
+    Context <--> Router
+    Router -->|Decomposes Query| Plan
+    Plan -->|Sub-query 1 & 2| SearchAPI
+    SearchAPI -->|Search Results URLs| Scraper
+    Scraper -->|Extracted Web Body Content| Episodic
+    Episodic -->|Cached Data Snippets| LLMCheck[LLM Synthesis Judge]
+    LLMCheck -->|Math Validation| Interpreter
+    Interpreter -->|Validated Calculations| LLMCheck
+    
+    LLMCheck -->|Information Complete?| RePlan
+    RePlan -->|No: Issue Follow-up Search| Router
+    RePlan -->|Yes: Final Synthesize| Synthesizer
