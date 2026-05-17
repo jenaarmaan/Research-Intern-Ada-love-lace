@@ -11,6 +11,8 @@ The assignment focuses on a comparative analysis of two leading deployed agentic
 1. **Devin (by Cognition Labs)**: An autonomous software engineering task-solving agent operating in a dynamic, write-access sandbox.
 2. **Perplexity Pro Search (by Perplexity AI)**: An autonomous search-and-retrieval synthesizing agent operating at web scale under real-time constraints.
 
+In addition to academic text papers and diagrams, this branch includes a **premium, interactive Streamlit Web Laboratory Dashboard** that lets you run and visualize the cognitive loops of both agents in real-time right inside your web browser!
+
 ---
 
 ## Deliverables Checklist
@@ -22,47 +24,57 @@ All required files have been fully implemented, verified, and placed on the `ass
 *   [x] **Architecture Diagrams**: High-resolution, standalone Mermaid system layouts.
     *   Devin Schema: [devin_architecture.mermaid](file:///d:/projects/Research%20Intern%20-%20Ada%20love%20lace/assignment-1/devin_architecture.mermaid)
     *   Perplexity Schema: [perplexity_architecture.mermaid](file:///d:/projects/Research%20Intern%20-%20Ada%20love%20lace/assignment-1/perplexity_architecture.mermaid)
-*   [x] **Supporting Code (Simulations)**: Fully functional Python scripts modeling the real-world cognitive loops of both agents with ANSI colored logging outputs.
+*   [x] **Interactive Web Laboratory (Streamlit)**: A browser-based GUI visualizer detailing plan DAG updates, glowing CRT consoles, local IDE editors, and search crawl logs.
+    *   Web App: [streamlit_app.py](file:///d:/projects/Research%20Intern%20-%20Ada%20love%20lace/assignment-1/streamlit_app.py)
+    *   Manifest: [requirements.txt](file:///d:/projects/Research%20Intern%20-%20Ada%20love%20lace/assignment-1/requirements.txt)
+*   [x] **Console Simulations (CLI)**: Python scripts modeling the real-world cognitive loops of both agents with ANSI colored logging outputs.
     *   Devin Simulation: [mock_devin_agent.py](file:///d:/projects/Research%20Intern%20-%20Ada%20love%20lace/assignment-1/supporting_code/mock_devin_agent.py)
     *   Perplexity Simulation: [mock_perplexity_agent.py](file:///d:/projects/Research%20Intern%20-%20Ada%20love%20lace/assignment-1/supporting_code/mock_perplexity_agent.py)
 
 ---
 
-## Architectural Highlights
+## Interactive Web Dashboard Features
 
-### PEAS Framework Quick-Comparison
-
-| Dimension | Devin (Action-Oriented) | Perplexity Pro Search (Information-Oriented) |
-| :--- | :--- | :--- |
-| **Performance (P)** | Task completion rate (SWE-bench), compile success | Synthesis factuality, source relevance, latency |
-| **Environment (E)** | Stateful, write-access virtual OS sandbox | Stateful, read-only open-world Wide Web index |
-| **Actuators (A)** | Shell execution, File system patcher, Chromium Browser | Search query routing, HTML crawler, Calculator |
-| **Sensors (S)** | Terminal streams (stdout/stderr), compiler exit codes | Search API payloads, HTML text scraper, query intent |
-
-### Cognitive Subsystems
-
-*   **Memory**: Devin utilizes deep **Episodic Memory Logs** to allow system state rewinds and plan backtracking on test failures. Perplexity utilizes a light **Episodic Session Cache** of visited URLs and extracted facts to resolve multi-hop information extraction without redundant crawls.
-*   **Planning**: Devin uses non-linear **Language Agent Tree Search (LATS)** to construct hierarchical DAG plans. Perplexity utilizes a linear **Plan-and-Execute** routine with dynamic **Gap Detection** follow-up branches.
-*   **Tool-Use**: Devin operates using local, state-modifying OS tool interfaces (Bash Shell, VS-Code Workspace APIs). Perplexity operates using globally distributed API search gateways and anti-bot scraping scrapers.
+Our Streamlit laboratory (`streamlit_app.py`) provides an immersive, educational simulation interface:
+*   **Architecture Dashboard**: An elegant layout comparing the two agent systems under the PEAS framework, embedded with markdown code blocks showing Mermaid system routing graphs.
+*   **Devin Sandbox Experience**: Runs the self-healing compiler loop step-by-step. You will see:
+    *   A **Checklist Tracker** that updates colors (Pending $\rightarrow$ Completed) as goals are achieved.
+    *   A **Glowing CRT Bash Terminal** outputs compiling trace errors and package installations in real time.
+    *   A **Mock IDE Editor Window** displaying the active files of `app.py` as Devin edits it and patches errors.
+*   **Perplexity Pro Search Console**: Allows entering complex queries and viewing:
+    *   **Semantic Decompositions**: Breaking queries down into multi-hop plans.
+    *   **Web Crawler Logs**: Visualizing active crawls, URL hits, page scrapes, and information-gap discovery.
+    *   **Synthesized Citations**: Rendering final formatted responses cited with interactive clickable web indices.
 
 ---
 
-## Execution Instructions
+## Execution and Local Launching
 
-Both agent simulation scripts are written in plain Python 3 with zero external package dependencies, ensuring they execute immediately in any terminal context without environment setups.
+### 🖥️ Launching the Streamlit Web App Locally
+Make sure you have Streamlit installed, then run the launcher script:
 
-### Running Devin Sandbox Agent Simulation
-Devin simulates a ReAct loop: writing a Flask script with a syntax error, executing it, receiving a compiler traceback, detecting a missing library, installing the library, re-running, receiving a syntax error, applying an editor patch, and successfully verifying routing.
+```bash
+cd assignment-1
+streamlit run streamlit_app.py
+```
+
+### 💻 Launching Console Scripts (Alternative)
+Both agent simulation scripts can also be executed directly in your standard CLI shell:
 
 ```bash
 cd assignment-1/supporting_code
 python mock_devin_agent.py
-```
-
-### Running Perplexity Pro Search Agent Simulation
-Perplexity simulates a multi-hop query: taking a complex request, decomposing it, executing parallel Google/Bing search APIs, crawling/scraping pages, identifying information gaps (missing budget figures), firing a targeted secondary query, calculating results, and rendering a markdown report with cited sources.
-
-```bash
-cd assignment-1/supporting_code
 python mock_perplexity_agent.py
 ```
+
+---
+
+## Cloud Deployment (Streamlit Community Cloud)
+
+This app is 100% prepared for **zero-cost public hosting** via Streamlit Community Cloud:
+1.  Push the `assignment-1` branch to your GitHub repository.
+2.  Go to [share.streamlit.io](https://share.streamlit.io/) and log in with your GitHub account.
+3.  Click **"Deploy an App"** and choose your repository.
+4.  Set the **Branch** to `assignment-1`.
+5.  Set the **Main File Path** to `assignment-1/streamlit_app.py`.
+6.  Click **Deploy**! Streamlit Cloud will automatically build your dependencies from `requirements.txt` and launch your live lab portal.
