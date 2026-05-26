@@ -1,7 +1,7 @@
 # Evaluation Benchmark Report
 
 *Generated on: 2026-05-23 23:11:34*
-*System: Antigravity ReAct Agent v1.0*
+*System: ReAct Agent v1.0*
 
 ## Performance Summary Matrix
 

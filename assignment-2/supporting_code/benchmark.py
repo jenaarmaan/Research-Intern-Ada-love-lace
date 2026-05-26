@@ -123,7 +123,7 @@ def run_evaluation_suite():
     evaluation_report = {
         "metadata": {
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-            "system": "Antigravity ReAct Agent v1.0",
+            "system": "ReAct Agent v1.0",
             "environment": "Windows Py3 Sandbox"
         },
         "summary": {
