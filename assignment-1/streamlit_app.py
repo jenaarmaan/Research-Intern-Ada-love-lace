@@ -250,7 +250,7 @@ with st.sidebar:
     st.markdown("### Choose Lab Dashboard:")
     nav_selection = st.radio(
         label="Navigation Menu",
-        options=["📊 Architecture Comparison", "💻 Devin Task Agent", "🔍 Perplexity Search Agent", "🧪 Lab Sessions (L1.1 & L1.2)"],
+        options=["📊 Architecture Comparison", "💻 Devin Task Agent", "🔍 Perplexity Search Agent", "🧪 Lab Sessions (L1.1 & L1.2)", "📖 Workspace Documentation"],
         label_visibility="collapsed"
     )
     
@@ -1121,6 +1121,258 @@ response = query_engine.query("Explain Devin architecture")
             """, language="python")
             
             st.info("💡 LlamaIndex is optimized for search-augmenting LLMs (RAG) on top of complex structured or unstructured files.")
+
+
+elif nav_selection == "📖 Workspace Documentation":
+    st.markdown('<div class="title-gradient">Workspace Documentation</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle-text">Comprehensive study guides, PEAS matrices, system schematics, and test benchmarks.</div>', unsafe_allow_html=True)
+    
+    doc_tab1, doc_tab2, doc_tab3, doc_tab4 = st.tabs([
+        "📄 Coursework Brief", 
+        "💻 Devin Test Suite", 
+        "🔍 Perplexity Test Suite", 
+        "🧪 Lab ReAct Test Suite"
+    ])
+    
+    with doc_tab1:
+        st.subheader("📚 Coursework Overview & Brief")
+        st.markdown("""
+        This interactive workspace consolidates the foundational elements of **Module 1 (Agent Architectures & Design)** and **Module 2 (Reasoning & Tool Use)**. 
+        It serves as a visual and functional cognitive simulator comparing closed-loop code synthesis systems with open-world search agents.
+        """)
+        
+        st.subheader("📊 Architecture Comparison & PEAS Rationale")
+        st.markdown("""
+        The architecture comparison module details two primary paradigms:
+        
+        1. **Devin (Closed-Loop Coder)**:
+           - **Operational Flow**: Reads a coding goal, creates a Directed Acyclic Graph (DAG) plan, executes commands, intercepts compiler error outputs, and self-corrects code files dynamically inside a Docker environment.
+           - **Environments**: Highly stateful, local filesystem, write-access command shell.
+           - **Actuators**: File editor patcher, bash terminal, browser controller.
+           
+        2. **Perplexity Pro Search (Information Synthesizer)**:
+           - **Operational Flow**: Decomposes a user query, triggers parallel primary crawlers, evaluates data completeness (Gap Check), replans/triggers secondary crawls if facts are missing, and synthesizes a final cited response.
+           - **Environments**: Read-only, open web indexes, search API catalogs, session caches.
+           - **Actuators**: Multi-hop query router, scraper indexer, citation formatter.
+        """)
+        
+        st.info("💡 Tip: Navigate to the individual workspace pages in the sidebar to run interactive loop cycle simulations for each agent!")
+
+    with doc_tab2:
+        st.subheader("💻 Devin Task Agent Test Suite")
+        st.markdown("Below are three dynamic benchmark scenarios evaluated inside the isolated Devin Sandbox container.")
+        
+        # Test Case 1 Table
+        st.markdown("### 🟢 Test Case 1: Flask Web Deployment")
+        st.markdown("""
+| Dimension | Value / Details |
+| :--- | :--- |
+| **Input Prompt** | Set up a basic Flask server inside `app.py` and verify it running on route `/`. |
+| **Expected Outcome** | 1. Write draft Flask server with a syntax error.<br>2. Execute script and catch `ModuleNotFoundError`.<br>3. Install missing package `flask` via pip.<br>4. Catch `SyntaxError` (missing colon).<br>5. Patch code to append colon.<br>6. Start server thread and verify HTTP status 200 via curl check. |
+| **Actual / Real Result** | Successfully installed `flask-3.0.2`, identified syntax bug (`def index()`) at cycle 4, applied patch, and curl returned HTTP 200 payload `"Hello from Devin Sandbox!"`. |
+| **Technical Rationale** | Demonstrates compiler traceback parsing and dynamic package-manager installation triggers to heal broken runtime environments. |
+        """)
+        
+        st.markdown("**Detailed Cycle Execution Trace & State Mutation**")
+        st.markdown("""
+| Cycle / Step | Agent Thought & Goal | Actuator Command | Sandbox Observation / Error | Workspace State / Result |
+| :--- | :--- | :--- | :--- | :--- |
+| **Cycle 1** | Set up flask server, write file `app.py` | `$ echo '...' > app.py` | Bash Code 0: Successfully wrote to file | Writes initial draft containing intent-based syntax error `def index()` (missing colon) |
+| **Cycle 2** | Run `app.py` to check baseline compilation | `$ python app.py` | `ModuleNotFoundError: No module named 'flask'` | Code unchanged; flags missing package `flask` |
+| **Cycle 3** | Install missing package `flask` using pip actuator | `$ pip install flask` | Successfully installed `flask-3.0.2` | Flask package loaded into container environment |
+| **Cycle 4** | Re-verify Flask compilation in container | `$ python app.py` | `SyntaxError: expected ':'` at `def index()` | Code compilation fails; flags missing colon; schedules patch |
+| **Cycle 5** | Apply patch to `app.py` adding missing colon | Code editor patch applied | Bash Code 0: Patch successfully committed | Updates function declaration to `def index():` |
+| **Cycle 6** | Re-run `app.py` to start server thread | `$ python app.py` | Server thread launched on `http://127.0.0.1:5000/` | Flask server runs in background |
+| **Cycle 7** | Check index route response using curl actuator | `$ curl -i http://127.0.0.1:5000/` | `HTTP 200 OK` with `"Hello from Devin Sandbox!"` | Output matches target. Shutdown server. Success! |
+""")
+        st.divider()
+
+        # Test Case 2 Table
+        st.markdown("### 🟢 Test Case 2: Database Migration (SQLite)")
+        st.markdown("""
+| Dimension | Value / Details |
+| :--- | :--- |
+| **Input Prompt** | Connect and query active records in a SQLite table named `users`. |
+| **Expected Outcome** | 1. Connect to SQLite database.<br>2. Catch `sqlite3.OperationalError` (no such table: users).<br>3. Run DDL schema migration to create `users` table.<br>4. Catch SQL query syntax error (double `FROM` keywords).<br>5. Patch query to use a single `FROM` keyword.<br>6. Query successfully and count queried record rows. |
+| **Actual / Real Result** | Traced missing table exception, created SQLite table `users` inserting Alice & Bob records, corrected `FROM FROM` to `FROM`, and successfully fetched 2 records. |
+| **Technical Rationale** | Shows how agents interact with external relational database APIs and recover from schema mismatch operational exceptions. |
+        """)
+        
+        st.markdown("**Detailed Cycle Execution Trace & State Mutation**")
+        st.markdown("""
+| Cycle / Step | Agent Thought & Goal | Actuator Command | Sandbox Observation / Error | Workspace State / Result |
+| :--- | :--- | :--- | :--- | :--- |
+| **Cycle 1** | Write file `db.py` to connect and query SQLite | `$ echo '...' > db.py` | Bash Code 0: Successfully wrote to file | Code contains syntax error (double `FROM` keywords: `SELECT * FROM FROM users`) |
+| **Cycle 2** | Execute query check inside container | `$ python db.py` | `sqlite3.OperationalError: no such table: users` | database connection opens, but query fails due to missing table |
+| **Cycle 3** | Run DDL schema migration to build `users` table | Run sqlite CREATE TABLE schema | Migration commit successful | SQLite `users` table created with columns `id`, `name`, `active` |
+| **Cycle 4** | Re-run database verification script | `$ python db.py` | `sqlite3.OperationalError: near "FROM": syntax error` | Query syntax error identified on repeated `FROM` |
+| **Cycle 5** | Patch SQL query syntax inside `db.py` | Code editor patch applied | Bash Code 0: Patch successfully committed | Corrects query to single `FROM` and inserts mock records (Alice, Bob) |
+| **Cycle 6** | Execute query verification script | `$ python db.py` | `Query output: [(1, 'Alice', 1), (2, 'Bob', 1)]` | 2 records successfully fetched from SQLite database |
+| **Cycle 7** | Validate output count against target checks | Verify fetched array length | Count matches expected target (2 records) | Target verified. Success! |
+""")
+        st.divider()
+
+        # Test Case 3 Table
+        st.markdown("### 🟢 Test Case 3: Data Pipeline (Pandas)")
+        st.markdown("""
+| Dimension | Value / Details |
+| :--- | :--- |
+| **Input Prompt** | Read and compute average salary stats from an `employees.csv` spreadsheet. |
+| **Expected Outcome** | 1. Attempt CSV read.<br>2. Catch `FileNotFoundError` exception.<br>3. Generate mock `employees.csv` database file.<br>4. Catch `TypeError` (string concatenation error on salary addition).<br>5. Patch calculation code to cast salary column values to integers.<br>6. Calculate statistical average salary. |
+| **Actual / Real Result** | Caught file not found, generated CSV via command execution, resolved type mismatch using integer casting, and computed average salary of `5500.0`. |
+| **Technical Rationale** | Validates the agent's capability to resolve data ingestion blockers, handle format mismatches, and perform numerical analytics. |
+        """)
+        
+        st.markdown("**Detailed Cycle Execution Trace & State Mutation**")
+        st.markdown("""
+| Cycle / Step | Agent Thought & Goal | Actuator Command | Sandbox Observation / Error | Workspace State / Result |
+| :--- | :--- | :--- | :--- | :--- |
+| **Cycle 1** | Write file `pipeline.py` to read/calculate salaries | `$ echo '...' > pipeline.py` | Bash Code 0: Successfully wrote to file | Initial code reads CSV but contains string-int concatenation bug |
+| **Cycle 2** | Run data ingestion pipeline to check data | `$ python pipeline.py` | `FileNotFoundError: [Errno 2] No such file... 'employees.csv'` | Input dataset file is missing from working directory |
+| **Cycle 3** | Generate mock dataset `employees.csv` in workspace | `$ echo -e '...' > employees.csv` | CSV file generated successfully | `employees.csv` created containing salaries for Alice (5000) and Bob (6000) |
+| **Cycle 4** | Re-run pipeline to check calculations | `$ python pipeline.py` | `TypeError: can only concatenate str (not "int") to str` | Value read from CSV as string, causing crash on integer addition |
+| **Cycle 5** | Patch `pipeline.py` to cast salary column to int | Code editor patch applied | Bash Code 0: Patch successfully committed | Implements type conversion: `salaries = [int(line.split(',')[1]) ...]` |
+| **Cycle 6** | Re-run pipeline script | `$ python pipeline.py` | `Average Salary calculated: 5500.0` | Math logic executes successfully |
+| **Cycle 7** | Verify computed average stats | Extract output statistics | Average salary matches check target (5500.0) | Target verified. Success! |
+""")
+
+    with doc_tab3:
+        st.subheader("🔍 Perplexity Search Agent Test Suite")
+        st.markdown("Below are three dynamic benchmark scenarios evaluated by the Perplexity Pro Search multi-hop engine.")
+        
+        # Test Case 1 Table
+        st.markdown("### 🟢 Test Case 1: Software Piracy Solutions")
+        st.markdown("""
+| Dimension | Value / Details |
+| :--- | :--- |
+| **Input Query** | *what is the best solution for piracy and its technical importance?* |
+| **Expected Outcome** | 1. Decompose query into sub-problems: piracy countermeasures and enclave details.<br>2. Scrape TechCrunch and Wired standards databases.<br>3. Identify Hardware-backed DRM (Widevine L1) as the best solution.<br>4. Detect information gap: missing enclave cryptographic details.<br>5. Trigger secondary crawl on Wikipedia and IEEE secure enclaves.<br>6. Synthesize final answer detailing isolated registers and memory dump protection. |
+| **Actual / Real Result** | Extracted `piracy solutions`, crawled TechCrunch and Wired, flagged missing technical importance details, crawled Wikipedia and IEEE enclaves, and synthesized response detailing isolated registers. |
+| **Technical Rationale** | Shows dynamic gap-detection triggers. If primary scrape yields no implementation mechanics, the search engine automatically replans and schedules secondary crawl sweeps. |
+        """)
+        
+        st.markdown("**Detailed Multi-Hop Trace Contents**")
+        st.markdown("""
+| Step / Phase | Semantic Intent & Focus | Search Query & Source Visited | Scraped Knowledge Snippet | Gap Detection & Re-planning |
+| :--- | :--- | :--- | :--- | :--- |
+| **Step 1: Semantic Intent** | Decompose query into independent sub-problems | *what is the best solution for piracy...* | N/A (Decomposition phase) | Formulates sequential multi-hop plan. Stage 1 query: `'piracy solutions'`. |
+| **Step 2: Primary Crawl** | Query and crawl search engines for general overview | `'piracy solutions'` (TechCrunch, Wired) | "Hardware-backed DRM (Widevine L1) is the industry standard for media protection..." | Visited 2 sources. Extracted Widevine L1 as best anti-piracy solution. |
+| **Step 3: Gap Check** | Evaluate database response completeness | Core Reasoning engine | "Widevine L1 enclaves identify as best solution." | **GAP DETECTED**: Details on cryptographic/secure enclave importance are missing. Triggers: `'technical importance of secure enclaves'`. |
+| **Step 4: Secondary Crawl** | Query and crawl details for detected gaps | `'technical importance of secure enclaves'` (Wikipedia, IEEE) | "Secure enclaves use isolated CPU registers, cryptographic keys, and separate execution memory..." | Visited secondary sources to acquire isolation and memory dump protection details. |
+| **Step 5: Synthesized Citation** | Merge facts and generate cited output | LLM Synthesis engine | Compiled primary + secondary findings | Formulates cited answer detailing isolated registers, memory dump prevention, and untrusted host protection. |
+""")
+        st.divider()
+
+        # Test Case 2 Table
+        st.markdown("### 🟢 Test Case 2: Oscars Winners & Budgets (2026)")
+        st.markdown("""
+| Dimension | Value / Details |
+| :--- | :--- |
+| **Input Query** | *Who won the most Oscars in 2026, and what was their budget?* |
+| **Expected Outcome** | 1. Decompose query: most Oscar wins and movie production financials.<br>2. Crawl Variety and Hollywood Reporter list pages.<br>3. Identify Dune: Part Three as winner (6 wins).<br>4. Detect knowledge gap: missing budget statistics.<br>5. Trigger secondary crawl on Box Office Mojo and Wikipedia.<br>6. Synthesize response citing Warner Bros/Legendary co-financing budget. |
+| **Actual / Real Result** | Crawled winners list, retrieved Dune: Part Three wins fact, flagged budget gap, crawled Box Office Mojo details page, and synthesized cited response outlining the $190M production budget. |
+| **Technical Rationale** | Demonstrates sequential multi-hop dependency resolution, where sub-problem 2 (budget search query) is constructed dynamically using the output of sub-problem 1 (movie name). |
+        """)
+        
+        st.markdown("**Detailed Multi-Hop Trace Contents**")
+        st.markdown("""
+| Step / Phase | Semantic Intent & Focus | Search Query & Source Visited | Scraped Knowledge Snippet | Gap Detection & Re-planning |
+| :--- | :--- | :--- | :--- | :--- |
+| **Step 1: Semantic Intent** | Decompose query into sub-problems | *Who won the most Oscars in 2026, and what was their budget?* | N/A | Sub-problem 2 (budget) depends on Sub-problem 1 (winner). Stage 1 query: `'2026 Oscar winners'`. |
+| **Step 2: Primary Crawl** | Crawl winners list database | `'2026 Oscar winners'` (Variety, Hollywood Reporter) | "Dune: Part Three dominated the Oscars with 6 wins..." | Visited 2 sources. Extracted winner: Dune: Part Three. |
+| **Step 3: Gap Check** | Evaluate retrieved info for missing facts | Core Reasoning engine | "Dune: Part Three won most Oscars (6 wins)." | **GAP DETECTED**: Film budget stats missing. Triggers secondary query: `'Dune: Part Three movie budget'`. |
+| **Step 4: Secondary Crawl** | Retrieve production budget details | `'Dune: Part Three movie budget'` (Box Office Mojo, Wikipedia) | "Dune: Part Three had a production budget of approximately $190 million USD..." | Visited Box Office Mojo. Scraped co-financing budget. |
+| **Step 5: Synthesized Citation** | Format final cited response | LLM Synthesis engine | Compiled wins + budget facts | Outputs cited answer detailing Denis Villeneuve's film, 6 wins, $190M budget, and $720M gross. |
+""")
+        st.divider()
+
+        # Test Case 3 Table
+        st.markdown("### 🟢 Test Case 3: Fallback Search (General Topic)")
+        st.markdown("""
+| Dimension | Value / Details |
+| :--- | :--- |
+| **Input Query** | *Explain quantum computing hardware enclaves* |
+| **Expected Outcome** | 1. Filter out punctuation and extract keywords (`quantum`, `hardware`).<br>2. Formulate primary crawl queries on general tech portals.<br>3. Retrieve base overview facts.<br>4. Flag engineering implications gap.<br>5. Run secondary crawl on research reviewers.<br>6. Synthesize answer explaining modular flexibility and decoupling. |
+| **Actual / Real Result** | Extracted keywords `quantum` and `hardware`, visited tech portals, identified missing engineering details, crawled secondary articles, and compiled answer citing modular flexibility. |
+| **Technical Rationale** | Verifies the robustness of the fallback routing engine, allowing the search simulator to process and resolve arbitrary queries gracefully without crashing. |
+        """)
+        
+        st.markdown("**Detailed Multi-Hop Trace Contents**")
+        st.markdown("""
+| Step / Phase | Semantic Intent & Focus | Search Query & Source Visited | Scraped Knowledge Snippet | Gap Detection & Re-planning |
+| :--- | :--- | :--- | :--- | :--- |
+| **Step 1: Semantic Intent** | Parse keywords and decompose query | *Explain quantum computing hardware enclaves* | N/A | Filters noise. Extracts keyword target terms: `'quantum'`, `'hardware'`. Stage 1 query: `'quantum'`. |
+| **Step 2: Primary Crawl** | Crawl base overview facts | `'quantum'` (Tech Portal, Online Encyclopedia) | "Quantum computing systems integrate modular environments to scale..." | Visited 2 general sources. Extracted baseline architectural overview. |
+| **Step 3: Gap Check** | Evaluate data completeness | Core Reasoning engine | "Base context on quantum hardware enclaves." | **GAP DETECTED**: Practical engineering implications are missing. Triggers: `'quantum technical engineering implications'`. |
+| **Step 4: Secondary Crawl** | Crawl engineering/reviewer articles | `'quantum technical engineering implications'` (Tech Reviewer) | "Main engineering importance resides in its modular flexibility and real-time execution speeds..." | Visited secondary source. Scraped modular coupling and speed performance details. |
+| **Step 5: Synthesized Citation** | Compile findings | LLM Synthesis engine | Combined overview + modular details | Outputs cited response explaining quantum hardware architecture, highlighting modular flexibility and speed. |
+""")
+
+    with doc_tab4:
+        st.subheader("🧪 Lab ReAct Agent Test Suite")
+        st.markdown("Below are three dynamic runs evaluated by our Lab 1.1 Minimal ReAct Agent from scratch.")
+        
+        # Test Case 1 Table
+        st.markdown("### 🟢 Run 1: Combined Arithmetic & Capital Check")
+        st.markdown("""
+| Dimension | Value / Details |
+| :--- | :--- |
+| **Input Goal** | *Calculate (45 * 23) + 12 and verify the capital of France.* |
+| **Expected Outcome** | - **Cycle 1**: Parse math `(45 * 23) + 12`. Call Math tool. Get observation `1047`.<br>- **Cycle 2**: Parse search `capital of France`. Call Search tool. Get observation `Paris is the capital of France`.<br>- **Cycle 3**: Read observations and generate final synthesized response. |
+| **Actual / Real Result** | Math tool output: `1047`. Search database hit: `Paris is the capital of France.` Final answer: `"The mathematical calculation yields 1047. Paris is the capital of France."` |
+| **Technical Rationale** | Standard ReAct sequence demonstrating sequential reasoning, execution, and synthesis cycles without high-level wrapper frameworks. |
+        """)
+        
+        st.markdown("**Detailed ReAct Trace Contents**")
+        st.markdown("""
+| Cycle | Reasoning / Thought | Action & Target Tool | Observation / Result | Workspace State / Result |
+| :--- | :--- | :--- | :--- | :--- |
+| **Cycle 1** | Parse mathematical expression and call Math tool | `Math[(45 * 23) + 12]` | `1047` | Arithmetic result cached in episodic memory |
+| **Cycle 2** | Verify target country capital using Search tool | `Search[capital of France]` | `"Paris is the capital of France."` | Geographic fact cached in episodic memory |
+| **Cycle 3** | Read observations and compile final response | N/A | N/A | Synthesizes response: `"The mathematical calculation yields 1047. Paris is the capital of France."` |
+""")
+        st.divider()
+
+        # Test Case 2 Table
+        st.markdown("### 🟢 Run 2: Alternative Math & German Capital")
+        st.markdown("""
+| Dimension | Value / Details |
+| :--- | :--- |
+| **Input Goal** | *Calculate (10 + 20) * 30 and find the capital of Germany.* |
+| **Expected Outcome** | - **Cycle 1**: Parse math `(10 + 20) * 30`. Call Math tool. Get observation `900`.<br>- **Cycle 2**: Parse search `capital of Germany`. Call Search tool. Get observation `Berlin is the capital of Germany`.<br>- **Cycle 3**: Synthesize calculations and facts into final answer. |
+| **Actual / Real Result** | Math tool output: `900`. Search database hit: `Berlin is the capital of Germany.` Final answer: `"The mathematical calculation yields 900. Berlin is the capital of Germany."` |
+| **Technical Rationale** | Validates the regex arithmetic parser and mock search keyword match loops on varied country keys. |
+        """)
+        
+        st.markdown("**Detailed ReAct Trace Contents**")
+        st.markdown("""
+| Cycle | Reasoning / Thought | Action & Target Tool | Observation / Result | Workspace State / Result |
+| :--- | :--- | :--- | :--- | :--- |
+| **Cycle 1** | Parse mathematical expression and call Math tool | `Math[(10 + 20) * 30]` | `900` | Arithmetic result cached in episodic memory |
+| **Cycle 2** | Verify target country capital using Search tool | `Search[capital of Germany]` | `"Berlin is the capital of Germany."` | Geographic fact cached in episodic memory |
+| **Cycle 3** | Read observations and compile final response | N/A | N/A | Synthesizes response: `"The mathematical calculation yields 900. Berlin is the capital of Germany."` |
+""")
+        st.divider()
+
+        # Test Case 3 Table
+        st.markdown("### 🟢 Run 3: Geography-Only Queries")
+        st.markdown("""
+| Dimension | Value / Details |
+| :--- | :--- |
+| **Input Goal** | *Verify the population of Paris and locate Rome.* |
+| **Expected Outcome** | - **Cycle 1**: Detect no arithmetic formula. Skip Math tool and immediately search `population of Paris`. Retrieve observation `2.1 million`.<br>- **Cycle 2**: Parse search `locate Rome`. Retrieve mock search result.<br>- **Cycle 3**: Synthesize search facts into final answer. |
+| **Actual / Real Result** | Math tool call skipped. Search 1 hit: `The population of Paris is approximately 2.1 million.` Search 2 hit: `Locate Rome info retrieved (mock database result).` Final answer: `"The population of Paris is approximately 2.1 million. Locate Rome info retrieved (mock database result)."` |
+| **Technical Rationale** | Confirms task-branching logic where math tools are dynamically skipped when arithmetic expressions are missing from the input prompt. |
+        """)
+        
+        st.markdown("**Detailed ReAct Trace Contents**")
+        st.markdown("""
+| Cycle | Reasoning / Thought | Action & Target Tool | Observation / Result | Workspace State / Result |
+| :--- | :--- | :--- | :--- | :--- |
+| **Cycle 1** | No math formula detected; parse and query population | `Search[population of Paris]` | `"The population of Paris is approximately 2.1 million."` | Population statistics cached in episodic memory |
+| **Cycle 2** | Parse second query concept and search | `Search[locate Rome]` | `"Rome info retrieved (mock database result)."` | Location data cached in episodic memory |
+| **Cycle 3** | Read observations and compile final response | N/A | N/A | Synthesizes response: `"The population of Paris is approximately 2.1 million. Locate Rome info retrieved..."` |
+""")
 
 # Footer
 st.divider()
