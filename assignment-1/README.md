@@ -30,6 +30,9 @@ All required files have been fully implemented, verified, and placed on the `ass
 *   [x] **Console Simulations (CLI)**: Python scripts modeling the real-world cognitive loops of both agents with ANSI colored logging outputs.
     *   Devin Simulation: [mock_devin_agent.py](file:///d:/projects/Research%20Intern%20-%20Ada%20love%20lace/assignment-1/supporting_code/mock_devin_agent.py)
     *   Perplexity Simulation: [mock_perplexity_agent.py](file:///d:/projects/Research%20Intern%20-%20Ada%20love%20lace/assignment-1/supporting_code/mock_perplexity_agent.py)
+*   [x] **Lab Sessions (Completed)**: Runnable Python scripts representing the Module 1 Lab tasks.
+    *   Lab 1.1 (ReAct from Scratch): [lab_1_1_minimal_react.py](file:///d:/projects/Research%20Intern%20-%20Ada%20love%20lace/assignment-1/supporting_code/lab_1_1_minimal_react.py)
+    *   Lab 1.2 (LangChain vs LlamaIndex Comparison): [lab_1_2_langchain_vs_llamaindex.py](file:///d:/projects/Research%20Intern%20-%20Ada%20love%20lace/assignment-1/supporting_code/lab_1_2_langchain_vs_llamaindex.py)
 
 ---
 
