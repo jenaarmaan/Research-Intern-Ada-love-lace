@@ -903,28 +903,116 @@ elif nav_selection == "🧪 Lab Sessions (L1.1 & L1.2)":
         if 'lab_ans' not in st.session_state:
             st.session_state.lab_ans = ""
             
+        # Helper tools for dynamic ReAct
+        def extract_math_expr(query_str: str) -> str:
+            pattern = r"[\d\s\+\-\*\/\(\)\.]+"
+            matches = re.findall(pattern, query_str)
+            valid_matches = []
+            for m in matches:
+                m_strip = m.strip()
+                if len(m_strip) >= 3 and any(char in m_strip for char in "+-*/") and any(char.isdigit() for char in m_strip):
+                    valid_matches.append(m_strip)
+            if valid_matches:
+                return max(valid_matches, key=len)
+            return ""
+
+        def extract_search_query(query_str: str) -> str:
+            math_expr = extract_math_expr(query_str)
+            clean_query = query_str
+            if math_expr:
+                clean_query = clean_query.replace(math_expr, "")
+            match = re.search(r"(?:verify|find|search for|what is|capital of|population of)\s+([^.]+)", clean_query, re.IGNORECASE)
+            if match:
+                extracted = match.group(1).strip()
+                extracted = re.sub(r"^(?:the capital of|the population of|the|capital of|population of)\s+", "", extracted, flags=re.IGNORECASE)
+                if "capital of" in query_str.lower():
+                    return f"capital of {extracted}"
+                elif "population of" in query_str.lower():
+                    return f"population of {extracted}"
+                return extracted
+            return ""
+
+        def math_tool(expression: str) -> str:
+            cleaned_expr = re.sub(r'[^0-9\+\-\*\/\(\)\. ]', '', expression)
+            try:
+                result = eval(cleaned_expr, {"__builtins__": None}, {})
+                return str(result)
+            except Exception as e:
+                return f"Error evaluating math expression: {e}"
+
+        def search_tool(q_str: str) -> str:
+            db = {
+                "capital of france": "Paris is the capital of France.",
+                "capital of germany": "Berlin is the capital of Germany.",
+                "capital of italy": "Rome is the capital of Italy.",
+                "capital of spain": "Madrid is the capital of Spain.",
+                "capital of united kingdom": "London is the capital of the United Kingdom.",
+                "capital of usa": "Washington, D.C. is the capital of the United States.",
+                "capital of united states": "Washington, D.C. is the capital of the United States.",
+                "capital of japan": "Tokyo is the capital of Japan.",
+                "capital of india": "New Delhi is the capital of India.",
+                "population of france": "The population of France is approximately 68 million.",
+                "population of germany": "The population of Germany is approximately 84 million.",
+                "population of paris": "The population of Paris is approximately 2.1 million.",
+                "population of tokyo": "The population of Tokyo is approximately 37.4 million.",
+                "population of london": "The population of London is approximately 8.9 million.",
+                "population of new york": "The population of New York is approximately 8.3 million."
+            }
+            q_clean = q_str.lower().strip()
+            for key in db:
+                if key in q_clean or q_clean in key:
+                    return db[key]
+            return f"{q_str.capitalize()} info retrieved (mock database result)."
+
         col_run_lab, col_reset_lab = st.columns([1, 4])
         with col_run_lab:
             if st.button("Run ReAct Loop 🚀", key="btn_run_lab_1_1"):
-                st.session_state.lab_logs = ["[ReAct Agent Initialized] Goal: Calculate (45 * 23) + 12 and verify capital of France."]
+                query = lab_query
+                math_expr = extract_math_expr(query)
+                search_q = extract_search_query(query)
                 
-                # Cycle 1: Thought & Action
+                st.session_state.lab_logs = [f"[ReAct Agent Initialized] Goal: {query}"]
+                
+                # Cycle 1
                 st.session_state.lab_logs.append("\n--- CYCLE 1 ---")
-                st.session_state.lab_logs.append("[Thought] I need to calculate the math expression: (45 * 23) + 12. I will call the Math tool.")
-                st.session_state.lab_logs.append("[Action] Math[(45 * 23) + 12]")
-                st.session_state.lab_logs.append("[Observation] 1047")
-                
-                # Cycle 2: Thought & Action
+                if math_expr:
+                    st.session_state.lab_logs.append(f"[Thought] I need to calculate the mathematical expression: {math_expr}. I will call the Math tool.")
+                    st.session_state.lab_logs.append(f"[Action] Math[{math_expr}]")
+                    math_res = math_tool(math_expr)
+                    st.session_state.lab_logs.append(f"[Observation] {math_res}")
+                else:
+                    st.session_state.lab_logs.append("[Thought] No mathematical expression detected. Proceeding to search queries.")
+                    math_res = "N/A"
+                    
+                # Cycle 2
                 st.session_state.lab_logs.append("\n--- CYCLE 2 ---")
-                st.session_state.lab_logs.append("[Thought] I have the math output: 1047. Now I need to search for the capital of France.")
-                st.session_state.lab_logs.append("[Action] Search[capital of France]")
-                st.session_state.lab_logs.append("[Observation] Paris is the capital of France.")
-                
-                # Cycle 3: Final Answer
+                if search_q:
+                    thought_str = f"[Thought] "
+                    if math_expr:
+                        thought_str += f"The calculation output is {math_res}. "
+                    thought_str += f"Now I need to verify the info for '{search_q}'. I should use the Search tool."
+                    st.session_state.lab_logs.append(thought_str)
+                    st.session_state.lab_logs.append(f"[Action] Search[{search_q}]")
+                    search_res = search_tool(search_q)
+                    st.session_state.lab_logs.append(f"[Observation] {search_res}")
+                else:
+                    st.session_state.lab_logs.append("[Thought] No search queries detected. Wrapping up task.")
+                    search_res = "N/A"
+                    
+                # Cycle 3
                 st.session_state.lab_logs.append("\n--- CYCLE 3 ---")
-                st.session_state.lab_logs.append("[Thought] I have the calculation (1047) and the capital (Paris). I can now synthesize the response.")
-                st.session_state.lab_logs.append("[Final Answer] The calculation yields 1047, and the capital of France is Paris.")
-                st.session_state.lab_ans = "The calculation of (45 * 23) + 12 yields 1047, and the capital of France is Paris."
+                st.session_state.lab_logs.append("[Thought] I have completed the tool executions and gathered the required observations. Ready to synthesize the final answer.")
+                
+                final_ans = ""
+                if math_expr and math_res != "N/A" and not math_res.startswith("Error"):
+                    final_ans += f"The mathematical calculation yields {math_res}. "
+                if search_q and search_res != "N/A":
+                    final_ans += f"{search_res}"
+                if not final_ans:
+                    final_ans = "Task completed successfully with no additional actions."
+                    
+                st.session_state.lab_logs.append(f"[Final Answer] {final_ans}")
+                st.session_state.lab_ans = final_ans
                 
         with col_reset_lab:
             if st.button("Clear Logs 🔄", key="btn_reset_lab_1_1"):
