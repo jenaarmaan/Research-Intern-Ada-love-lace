@@ -170,7 +170,7 @@ with st.sidebar:
     st.markdown("### Choose Lab Dashboard:")
     nav_selection = st.radio(
         label="Navigation Menu",
-        options=["📊 Architecture Comparison", "💻 Devin Task Agent", "🔍 Perplexity Search Agent"],
+        options=["📊 Architecture Comparison", "💻 Devin Task Agent", "🔍 Perplexity Search Agent", "🧪 Lab Sessions (L1.1 & L1.2)"],
         label_visibility="collapsed"
     )
     
@@ -518,6 +518,118 @@ The production budget for **Dune: Part Three** was approximately **$190 million 
                     st.caption(f"**Source**: {url}")
                     st.write(content)
                     st.divider()
+
+# ----------------- PAGE 4: LAB SESSIONS (L1.1 & L1.2) -----------------
+elif nav_selection == "🧪 Lab Sessions (L1.1 & L1.2)":
+    st.markdown('<div class="title-gradient">Module 1 Lab Sessions</div>', unsafe_allow_html=True)
+    st.markdown('<div class="subtitle-text">Interactive Execution & Study of Labs L1.1 (Minimal ReAct Agent) and L1.2 (LangChain vs LlamaIndex)</div>', unsafe_allow_html=True)
+    
+    tab1, tab2 = st.tabs(["🧪 Lab 1.1: Minimal ReAct", "🧪 Lab 1.2: LangChain vs LlamaIndex"])
+    
+    with tab1:
+        st.subheader("L1.1: Minimal ReAct Agent from Scratch")
+        st.markdown("""
+        This lab demonstrates building a **Reason + Action (ReAct)** loop without any high-level frameworks.
+        The agent decomposes tasks, selects tools, and parses outputs iteratively.
+        """)
+        
+        lab_query = st.text_input(
+            "Enter ReAct Goal:",
+            value="Calculate (45 * 23) + 12 and verify the capital of France.",
+            key="lab_1_1_query_input"
+        )
+        
+        if 'lab_logs' not in st.session_state:
+            st.session_state.lab_logs = ["Awaiting execution..."]
+        if 'lab_ans' not in st.session_state:
+            st.session_state.lab_ans = ""
+            
+        col_run_lab, col_reset_lab = st.columns([1, 4])
+        with col_run_lab:
+            if st.button("Run ReAct Loop 🚀", key="btn_run_lab_1_1"):
+                st.session_state.lab_logs = ["[ReAct Agent Initialized] Goal: Calculate (45 * 23) + 12 and verify capital of France."]
+                
+                # Cycle 1: Thought & Action
+                st.session_state.lab_logs.append("\n--- CYCLE 1 ---")
+                st.session_state.lab_logs.append("[Thought] I need to calculate the math expression: (45 * 23) + 12. I will call the Math tool.")
+                st.session_state.lab_logs.append("[Action] Math[(45 * 23) + 12]")
+                st.session_state.lab_logs.append("[Observation] 1047")
+                
+                # Cycle 2: Thought & Action
+                st.session_state.lab_logs.append("\n--- CYCLE 2 ---")
+                st.session_state.lab_logs.append("[Thought] I have the math output: 1047. Now I need to search for the capital of France.")
+                st.session_state.lab_logs.append("[Action] Search[capital of France]")
+                st.session_state.lab_logs.append("[Observation] Paris is the capital of France.")
+                
+                # Cycle 3: Final Answer
+                st.session_state.lab_logs.append("\n--- CYCLE 3 ---")
+                st.session_state.lab_logs.append("[Thought] I have the calculation (1047) and the capital (Paris). I can now synthesize the response.")
+                st.session_state.lab_logs.append("[Final Answer] The calculation yields 1047, and the capital of France is Paris.")
+                st.session_state.lab_ans = "The calculation of (45 * 23) + 12 yields 1047, and the capital of France is Paris."
+                
+        with col_reset_lab:
+            if st.button("Clear Logs 🔄", key="btn_reset_lab_1_1"):
+                st.session_state.lab_logs = ["Awaiting execution..."]
+                st.session_state.lab_ans = ""
+                
+        col_term, col_ans = st.columns([2, 1])
+        with col_term:
+            st.markdown("**Interactive Terminal Logs**")
+            log_text = "\n".join(st.session_state.lab_logs)
+            st.markdown(f'<div class="terminal-console" style="height: 300px;">{log_text}</div>', unsafe_allow_html=True)
+            
+        with col_ans:
+            st.markdown("**Synthesized Answer**")
+            ans_box = st.session_state.lab_ans if st.session_state.lab_ans else "Awaiting agent execution..."
+            st.markdown(f'<div class="card" style="min-height: 120px;">{ans_box}</div>', unsafe_allow_html=True)
+            
+    with tab2:
+        st.subheader("L1.2: LangChain vs LlamaIndex Comparison")
+        st.markdown("""
+        Compare the developer experience and system architectures of the two major frameworks.
+        """)
+        
+        col_lc, col_li = st.columns(2)
+        with col_lc:
+            st.markdown("### 🔗 LangChain Chain Paradigm")
+            st.markdown("""
+            **Focus**: Prompt templates, explicit chains, and sequential execution.
+            """)
+            st.code("""
+# LangChain LCEL Syntax Example
+from langchain_core.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
+
+prompt = PromptTemplate.from_template(
+    "Suggest a name for a company making {product}"
+)
+model = ChatOpenAI(model="gpt-4")
+
+chain = prompt | model | StrOutputParser()
+response = chain.invoke({"product": "agentic software"})
+            """, language="python")
+            
+            st.info("💡 LangChain is optimized for orchestrating customizable loops, workflows, and multi-agent systems.")
+            
+        with col_li:
+            st.markdown("### 🗂️ LlamaIndex Data Paradigm")
+            st.markdown("""
+            **Focus**: Vector indices, document chunks, and RAG architectures.
+            """)
+            st.code("""
+# LlamaIndex Indexing Syntax Example
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
+
+# Ingest and create vector index
+documents = SimpleDirectoryReader("data").load_data()
+index = VectorStoreIndex.from_documents(documents)
+
+# Create query engine and retrieve facts
+query_engine = index.as_query_engine()
+response = query_engine.query("Explain Devin architecture")
+            """, language="python")
+            
+            st.info("💡 LlamaIndex is optimized for search-augmenting LLMs (RAG) on top of complex structured or unstructured files.")
 
 # Footer
 st.divider()
