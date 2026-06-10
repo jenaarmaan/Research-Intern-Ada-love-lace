@@ -1,6 +1,62 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import time
 import re
+
+def render_mermaid(code: str, height: int = 400):
+    html_code = f"""
+    <style>
+        body {{
+            margin: 0;
+            padding: 0;
+            background-color: #0d1117;
+            overflow: hidden;
+        }}
+        .container {{
+            background-color: #0d1117; 
+            padding: 15px; 
+            border-radius: 8px; 
+            border: 1px solid #30363d; 
+            height: {height}px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+            box-sizing: border-box;
+        }}
+        .mermaid {{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }}
+        .mermaid svg {{
+            max-width: 95% !important;
+            max-height: {height - 40}px !important;
+            height: auto !important;
+            width: auto !important;
+        }}
+    </style>
+    <div class="container">
+        <div class="mermaid">
+            {code}
+        </div>
+    </div>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({{ 
+            startOnLoad: true, 
+            theme: 'dark',
+            flowchart: {{
+                useMaxWidth: false,
+                htmlLabels: true
+            }}
+        }});
+    </script>
+    """
+    components.html(html_code, height=height, scrolling=False)
+
 
 # Set page configuration for a premium, wide dashboard look
 st.set_page_config(
@@ -197,7 +253,7 @@ if nav_selection == "📊 Architecture Comparison":
         
         # Devin Mermaid Render
         st.markdown("**System Integration Schematic (Mermaid)**")
-        st.code("""
+        render_mermaid("""
 graph TB
     User[User Prompt] <--> Chat[Chat API]
     LLM[LLM Brain] <--> Plan[Plan DAG Manager]
@@ -210,7 +266,7 @@ graph TB
     Editor -->|Content/Diffs| LLM
     Compiler[Compiler exit code] --> LLM
     Eval -->|Success/Correction| Plan
-        """, language="mermaid")
+        """, height=420)
 
     with col2:
         st.subheader("🔍 Perplexity Pro Search")
@@ -223,7 +279,7 @@ graph TB
         
         # Perplexity Mermaid Render
         st.markdown("**System Integration Schematic (Mermaid)**")
-        st.code("""
+        render_mermaid("""
 graph TB
     User[User Query] --> Parser[Semantic Router]
     Parser --> Router[Search Query Router]
@@ -235,7 +291,7 @@ graph TB
     LLM --> Gap[Gap Detector / Re-planner]
     Gap -->|No Gaps| Answer[Cited Markdown Answer]
     Gap -->|Gaps Found| Router
-        """, language="mermaid")
+        """, height=420)
 
     st.divider()
     
