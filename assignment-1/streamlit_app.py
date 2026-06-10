@@ -173,7 +173,7 @@ if 'devin_sandbox_installed' not in st.session_state:
 if 'perp_step' not in st.session_state:
     st.session_state.perp_step = 0
 if 'perp_logs' not in st.session_state:
-    st.session_state.perp_logs = []
+    st.session_state.perp_logs = ["System initialized. Awaiting search query initiation..."]
 if 'perp_episodic_memory' not in st.session_state:
     st.session_state.perp_episodic_memory = {}
 if 'perp_citations' not in st.session_state:
@@ -182,10 +182,10 @@ if 'perp_gap_detected' not in st.session_state:
     st.session_state.perp_gap_detected = False
 if 'perp_answer' not in st.session_state:
     st.session_state.perp_answer = ""
-if 'perp_winner' not in st.session_state:
-    st.session_state.perp_winner = None
-if 'perp_budget' not in st.session_state:
-    st.session_state.perp_budget = None
+if 'perp_query' not in st.session_state:
+    st.session_state.perp_query = ""
+if 'last_perp_query' not in st.session_state:
+    st.session_state.last_perp_query = ""
 
 # ----------------- SIMULATED DATABASES -----------------
 
@@ -212,6 +212,30 @@ WEB_INDEX = {
             "url": "https://wikipedia.org/wiki/Dune_Part_Three",
             "title": "Wikipedia: Dune: Part Three (2026 Film)",
             "content": "Dune: Part Three is a 2026 epic science fiction film. Principal photography took place on a budget of approximately $190 million USD, with filming in Jordan, Italy, and Budapest."
+        }
+    ],
+    "piracy solutions": [
+        {
+            "url": "https://techcrunch.com/2026/security/anti-piracy-standards",
+            "title": "Modern Technical Anti-Piracy Standards in 2026",
+            "content": "Modern anti-piracy relies heavily on hardware-rooted trust, multi-factor authentication, and secure decryption enclaves. Dynamic DRM systems like Widevine L1 represent the best defensive solutions."
+        },
+        {
+            "url": "https://wired.com/tech/piracy-prevention-widevine",
+            "title": "Google Widevine L1 Prevents Media Piracy",
+            "content": "Google's Widevine L1 DRM protocol enforces that video decryption keys are only handled within isolated hardware enclaves, preventing OS-level debuggers or screen recorders from sniffing high-quality streams."
+        }
+    ],
+    "technical importance of secure enclaves": [
+        {
+            "url": "https://wikipedia.org/wiki/Hardware-backed_security",
+            "title": "Wikipedia: Hardware-backed security enclaves",
+            "content": "Hardware-rooted trust enclaves are critical because they execute decryption instructions in isolated registers, separating cryptographic operations from the main OS to prevent memory dump exploits."
+        },
+        {
+            "url": "https://ieee.org/publications/hardware-enclave-security",
+            "title": "IEEE: Security Importance of Hardware-Rooted Enclaves",
+            "content": "Secure enclaves are technically important because they protect assets even if the host operating system is fully compromised. The decryption keys never leave the hardware boundary."
         }
     ]
 }
@@ -336,27 +360,55 @@ elif nav_selection == "💻 Devin Task Agent":
     st.markdown('<div class="title-gradient">Devin Task Sandbox</div>', unsafe_allow_html=True)
     st.markdown('<div class="subtitle-text">Interactive Simulation of Devin\'s ReAct Loop & Autonomous Error Self-Correction</div>', unsafe_allow_html=True)
     
-    # Devin Sandbox Control Functions
+    # Scenario Selector
+    devin_case_select = st.selectbox(
+        "Select Sandbox Scenario:",
+        ["Flask Web Deployment", "Database Migration (SQLite)", "Data Pipeline (Pandas)"],
+        key="devin_case_select_box"
+    )
+    
+    # Reset helper
     def devin_reset():
+        case = st.session_state.current_devin_case
         st.session_state.devin_step = 0
-        st.session_state.devin_logs = ["System reset. Awaiting task initiation..."]
+        st.session_state.devin_logs = ["System initialized. Awaiting task initiation..."]
         st.session_state.devin_code = ""
         st.session_state.devin_insights = []
-        st.session_state.devin_sandbox_installed = set(["pip", "python"])
-        st.session_state.devin_plan = [
-            {"id": 1, "task": "Create app.py and write basic Flask server code", "status": "pending"},
-            {"id": 2, "task": "Verify code by running the Flask server", "status": "pending"},
-            {"id": 3, "task": "Verify route / returns success code", "status": "pending"}
-        ]
+        
+        if case == "Flask Web Deployment":
+            st.session_state.devin_plan = [
+                {"id": 1, "task": "Create app.py and write basic Flask server code", "status": "pending"},
+                {"id": 2, "task": "Verify code by running the Flask server", "status": "pending"},
+                {"id": 3, "task": "Verify route / returns success code", "status": "pending"}
+            ]
+        elif case == "Database Migration (SQLite)":
+            st.session_state.devin_plan = [
+                {"id": 1, "task": "Create db.py to connect and query SQLite database", "status": "pending"},
+                {"id": 2, "task": "Verify database query by executing the script", "status": "pending"},
+                {"id": 3, "task": "Verify user records count matches expected target", "status": "pending"}
+            ]
+        elif case == "Data Pipeline (Pandas)":
+            st.session_state.devin_plan = [
+                {"id": 1, "task": "Create pipeline.py to read and clean employees dataset", "status": "pending"},
+                {"id": 2, "task": "Verify processing by executing the pipeline script", "status": "pending"},
+                {"id": 3, "task": "Verify average salary statistics match expected values", "status": "pending"}
+            ]
+            
+    # Trigger reset if case changed
+    if 'current_devin_case' not in st.session_state or st.session_state.current_devin_case != devin_case_select:
+        st.session_state.current_devin_case = devin_case_select
+        devin_reset()
         
     def devin_next_cycle():
         step = st.session_state.devin_step + 1
         st.session_state.devin_step = step
+        case = st.session_state.current_devin_case
         
-        # Cycle 1: Create File
-        if step == 1:
-            st.session_state.devin_plan[0]["status"] = "completed"
-            st.session_state.devin_code = """import flask
+        if case == "Flask Web Deployment":
+            # Cycle 1: Create File
+            if step == 1:
+                st.session_state.devin_plan[0]["status"] = "completed"
+                st.session_state.devin_code = """import flask
 app = flask.Flask(__name__)
 
 @app.route('/')
@@ -365,41 +417,37 @@ def index()
 
 if __name__ == '__main__':
     app.run()"""
-            st.session_state.devin_logs.append("[Reasoning] Current focal task is Task 1: Create app.py.\n[Action] Creating flask web app and injecting code with intent-based syntax error to verify safety checks...")
-            st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ echo '...' > app.py\n[Observation] Bash Code 0: Successfully wrote to file.")
-            
-        # Cycle 2: Attempt Python execution (throws ModuleNotFoundError)
-        elif step == 2:
-            st.session_state.devin_logs.append("[Reasoning] Task 1 done. Commencing Task 2: Verify code inside container.\n[Action] Launching Python execution runtime...")
-            st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ python app.py\n[Observation] Bash Code 1: ERROR DETECTED.\n\nTraceback (most recent call last):\n  File \"app.py\", line 1, in <module>\n    import flask\nModuleNotFoundError: No module named 'flask'")
-            st.session_state.devin_logs.append("[Self-Correction] Critical module 'flask' is missing in environment.")
-            st.session_state.devin_logs.append("[Planning Router] Inserting dynamic sub-task 'Task 1.5: Install Flask' into plan DAG.")
-            
-            # Dynamic Plan update
-            st.session_state.devin_plan.insert(1, {"id": 1.5, "task": "Install missing package 'flask' via pip", "status": "pending"})
-            st.session_state.devin_insights.append("Insight: Flask was absent in baseline sandbox container. Formulated package insertion task.")
+                st.session_state.devin_logs.append("[Reasoning] Current focal task is Task 1: Create app.py.\n[Action] Creating flask web app and injecting code with intent-based syntax error to verify safety checks...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ echo '...' > app.py\n[Observation] Bash Code 0: Successfully wrote to file.")
+                
+            # Cycle 2: Attempt Python execution (throws ModuleNotFoundError)
+            elif step == 2:
+                st.session_state.devin_logs.append("[Reasoning] Task 1 done. Commencing Task 2: Verify code inside container.\n[Action] Launching Python execution runtime...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ python app.py\n[Observation] Bash Code 1: ERROR DETECTED.\n\nTraceback (most recent call last):\n  File \"app.py\", line 1, in <module>\n    import flask\nModuleNotFoundError: No module named 'flask'")
+                st.session_state.devin_logs.append("[Self-Correction] Critical module 'flask' is missing in environment.")
+                st.session_state.devin_logs.append("[Planning Router] Inserting dynamic sub-task 'Task 1.5: Install Flask' into plan DAG.")
+                st.session_state.devin_plan.insert(1, {"id": 1.5, "task": "Install missing package 'flask' via pip", "status": "pending"})
+                st.session_state.devin_insights.append("Insight: Flask was absent in baseline sandbox container. Formulated package insertion task.")
 
-        # Cycle 3: Install Package
-        elif step == 3:
-            st.session_state.devin_plan[1]["status"] = "completed"
-            st.session_state.devin_sandbox_installed.add("flask")
-            st.session_state.devin_logs.append("[Reasoning] Focal sub-task is Task 1.5: Install missing packages.\n[Action] Invoking package manager actuator...")
-            st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ pip install flask\n[Observation] Bash Code 0: Collection download complete.\nSuccessfully installed flask-3.0.2")
+            # Cycle 3: Install Package
+            elif step == 3:
+                st.session_state.devin_plan[1]["status"] = "completed"
+                st.session_state.devin_logs.append("[Reasoning] Focal sub-task is Task 1.5: Install missing packages.\n[Action] Invoking package manager actuator...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ pip install flask\n[Observation] Bash Code 0: Collection download complete.\nSuccessfully installed flask-3.0.2")
 
-        # Cycle 4: Re-attempt Python (throws SyntaxError)
-        elif step == 4:
-            st.session_state.devin_logs.append("[Reasoning] Resuming Task 2: Verify app compiled in container.\n[Action] Invoking Python runtime executor...")
-            st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ python app.py\n[Observation] Bash Code 1: COMPILATION FAILED.\n\n  File \"app.py\", line 4\n    def index()\n               ^\nSyntaxError: expected ':'")
-            st.session_state.devin_logs.append("[Self-Correction] Syntax defect detected: missed colon in function declaration at line 4.")
-            st.session_state.devin_logs.append("[Planning Router] Inserting dynamic correction sub-task 'Task 1.8: Fix Syntax Error' into plan DAG.")
-            
-            st.session_state.devin_plan.insert(2, {"id": 1.8, "task": "Fix syntax error in app.py (add missing colon after function declaration)", "status": "pending"})
-            st.session_state.devin_insights.append("Insight: Syntax compiler check failed (def index() missing colon). Formulated codebase patching.")
+            # Cycle 4: Re-attempt Python (throws SyntaxError)
+            elif step == 4:
+                st.session_state.devin_logs.append("[Reasoning] Resuming Task 2: Verify app compiled in container.\n[Action] Invoking Python runtime executor...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ python app.py\n[Observation] Bash Code 1: COMPILATION FAILED.\n\n  File \"app.py\", line 4\n    def index()\n               ^\nSyntaxError: expected ':'")
+                st.session_state.devin_logs.append("[Self-Correction] Syntax defect detected: missed colon in function declaration at line 4.")
+                st.session_state.devin_logs.append("[Planning Router] Inserting dynamic correction sub-task 'Task 1.8: Fix Syntax Error' into plan DAG.")
+                st.session_state.devin_plan.insert(2, {"id": 1.8, "task": "Fix syntax error in app.py (add missing colon after function declaration)", "status": "pending"})
+                st.session_state.devin_insights.append("Insight: Syntax compiler check failed (def index() missing colon). Formulated codebase patching.")
 
-        # Cycle 5: Patch Code
-        elif step == 5:
-            st.session_state.devin_plan[2]["status"] = "completed"
-            st.session_state.devin_code = """import flask
+            # Cycle 5: Patch Code
+            elif step == 5:
+                st.session_state.devin_plan[2]["status"] = "completed"
+                st.session_state.devin_code = """import flask
 app = flask.Flask(__name__)
 
 @app.route('/')
@@ -408,21 +456,146 @@ def index():
 
 if __name__ == '__main__':
     app.run()"""
-            st.session_state.devin_logs.append("[Reasoning] Focal task is Task 1.8: Fix syntax error.\n[Action] Patching app.py to append missing colon...")
-            st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ echo '...' > app.py\n[Observation] Bash Code 0: Patch delta successfully committed.")
+                st.session_state.devin_logs.append("[Reasoning] Focal task is Task 1.8: Fix syntax error.\n[Action] Patching app.py to append missing colon...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ echo '...' > app.py\n[Observation] Bash Code 0: Patch delta successfully committed.")
 
-        # Cycle 6: Re-run app (Success)
-        elif step == 6:
-            st.session_state.devin_plan[3]["status"] = "completed"
-            st.session_state.devin_logs.append("[Reasoning] Re-evaluating Task 2: Verify app compiler state.\n[Action] Running Python server thread...")
-            st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ python app.py\n[Observation] Bash Code 0: Server thread launched successfully.\n* Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)")
+            # Cycle 6: Re-run app (Success)
+            elif step == 6:
+                st.session_state.devin_plan[3]["status"] = "completed"
+                st.session_state.devin_logs.append("[Reasoning] Re-evaluating Task 2: Verify app compiler state.\n[Action] Running Python server thread...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ python app.py\n[Observation] Bash Code 0: Server thread launched successfully.\n* Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)")
 
-        # Cycle 7: Verify Route (Finish)
-        elif step == 7:
-            st.session_state.devin_plan[4]["status"] = "completed"
-            st.session_state.devin_logs.append("[Reasoning] Task 2 completed. Initiating Task 3: Verify server response.\n[Action] Triggering Chromium visual/http parser to crawl http://127.0.0.1:5000/...")
-            st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ curl -i http://127.0.0.1:5000/\n[Observation] Bash Code 0: Response code retrieved.\nHTTP/1.1 200 OK\nContent-Type: text/html\n\nHello from Devin Sandbox!")
-            st.session_state.devin_logs.append("[SUCCESS] All architectural goals achieved! Shutting down server thread...")
+            # Cycle 7: Verify Route (Finish)
+            elif step == 7:
+                st.session_state.devin_plan[4]["status"] = "completed"
+                st.session_state.devin_logs.append("[Reasoning] Task 2 completed. Initiating Task 3: Verify server response.\n[Action] Triggering Chromium visual/http parser to crawl http://127.0.0.1:5000/...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ curl -i http://127.0.0.1:5000/\n[Observation] Bash Code 0: Response code retrieved.\nHTTP/1.1 200 OK\nContent-Type: text/html\n\nHello from Devin Sandbox!")
+                st.session_state.devin_logs.append("[SUCCESS] All architectural goals achieved! Shutting down server thread...")
+
+        elif case == "Database Migration (SQLite)":
+            # Cycle 1: Create File
+            if step == 1:
+                st.session_state.devin_plan[0]["status"] = "completed"
+                st.session_state.devin_code = """import sqlite3
+conn = sqlite3.connect('test.db')
+cursor = conn.cursor()
+# Syntax error near FROM
+cursor.execute("SELECT * FROM FROM users")
+print("Users queried successfully")"""
+                st.session_state.devin_logs.append("[Reasoning] Current focal task is Task 1: Create db.py.\n[Action] Creating SQLite database connect script and inserting code with syntax error...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ echo '...' > db.py\n[Observation] Bash Code 0: Successfully wrote to file.")
+                
+            # Cycle 2: Attempt Python execution (throws no such table: users)
+            elif step == 2:
+                st.session_state.devin_logs.append("[Reasoning] Task 1 done. Commencing Task 2: Verify database schema.\n[Action] Executing script...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ python db.py\n[Observation] Bash Code 1: ERROR DETECTED.\n\nsqlite3.OperationalError: no such table: users")
+                st.session_state.devin_logs.append("[Self-Correction] Database table 'users' does not exist in context.")
+                st.session_state.devin_logs.append("[Planning Router] Inserting dynamic sub-task 'Task 1.5: Create schema table' into plan DAG.")
+                st.session_state.devin_plan.insert(1, {"id": 1.5, "task": "Create database table schema for users table", "status": "pending"})
+                st.session_state.devin_insights.append("Insight: SQLite table 'users' was missing. Formulated migration script.")
+
+            # Cycle 3: Run Database migration
+            elif step == 3:
+                st.session_state.devin_plan[1]["status"] = "completed"
+                st.session_state.devin_logs.append("[Reasoning] Focal sub-task is Task 1.5: Create schema table.\n[Action] Patching database connection code to create schema...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ python -c 'import sqlite3; conn=sqlite3.connect(\"test.db\"); conn.cursor().execute(\"CREATE TABLE users (id int, name text, active int)\"); conn.commit()'\n[Observation] Bash Code 0: Migration commit successful.")
+
+            # Cycle 4: Re-attempt Python (throws SELECT * FROM FROM users syntax error)
+            elif step == 4:
+                st.session_state.devin_logs.append("[Reasoning] Resuming Task 2: Verify script queries database.\n[Action] Launching script execution...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ python db.py\n[Observation] Bash Code 1: SQL EXCEPTION.\n\nsqlite3.OperationalError: near \"FROM\": syntax error")
+                st.session_state.devin_logs.append("[Self-Correction] SQL syntax error found: repeated 'FROM' keyword.")
+                st.session_state.devin_logs.append("[Planning Router] Inserting dynamic correction sub-task 'Task 1.8: Fix SQL query syntax' into plan DAG.")
+                st.session_state.devin_plan.insert(2, {"id": 1.8, "task": "Fix SQL query syntax in db.py (remove duplicate FROM keyword)", "status": "pending"})
+                st.session_state.devin_insights.append("Insight: Found SQL syntax bug (SELECT * FROM FROM users). Formulated query patching.")
+
+            # Cycle 5: Patch SQL query
+            elif step == 5:
+                st.session_state.devin_plan[2]["status"] = "completed"
+                st.session_state.devin_code = """import sqlite3
+conn = sqlite3.connect('test.db')
+cursor = conn.cursor()
+cursor.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER, name TEXT, active INTEGER)")
+cursor.execute("INSERT INTO users VALUES (1, 'Alice', 1), (2, 'Bob', 1)")
+conn.commit()
+cursor.execute("SELECT * FROM users")
+print("Query output:", cursor.fetchall())"""
+                st.session_state.devin_logs.append("[Reasoning] Focal task is Task 1.8: Fix SQL query syntax.\n[Action] Rewriting query select command to correct format...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ echo '...' > db.py\n[Observation] Bash Code 0: Query patch successfully committed.")
+
+            # Cycle 6: Re-run script (Success)
+            elif step == 6:
+                st.session_state.devin_plan[3]["status"] = "completed"
+                st.session_state.devin_logs.append("[Reasoning] Re-evaluating Task 2: Verify db.py connection outputs.\n[Action] Invoking Python executor...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ python db.py\n[Observation] Bash Code 0: Script executed successfully.\nQuery output: [(1, 'Alice', 1), (2, 'Bob', 1)]")
+
+            # Cycle 7: Verify User Records (Finish)
+            elif step == 7:
+                st.session_state.devin_plan[4]["status"] = "completed"
+                st.session_state.devin_logs.append("[Reasoning] Task 2 completed. Commencing Task 3: Verify records match targets.\n[Action] Aggregating queried array length...")
+                st.session_state.devin_logs.append("[Observation] Count matches target: 2 user records successfully found in test.db.")
+                st.session_state.devin_logs.append("[SUCCESS] SQLite database setup and query validation completed successfully.")
+
+        elif case == "Data Pipeline (Pandas)":
+            # Cycle 1: Create File
+            if step == 1:
+                st.session_state.devin_plan[0]["status"] = "completed"
+                st.session_state.devin_code = """# read employees.csv
+with open('employees.csv', 'r') as f:
+    data = f.read()
+# type addition error
+val = data.split('\\n')[1].split(',')[1] + 1000
+print('Salary calculated:', val)"""
+                st.session_state.devin_logs.append("[Reasoning] Current focal task is Task 1: Create pipeline.py.\n[Action] Creating data cleaning script and reading employees dataset...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ echo '...' > pipeline.py\n[Observation] Bash Code 0: Successfully wrote to file.")
+                
+            # Cycle 2: Attempt Python execution (throws FileNotFoundError)
+            elif step == 2:
+                st.session_state.devin_logs.append("[Reasoning] Task 1 done. Commencing Task 2: Verify data cleaning run.\n[Action] Executing script...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ python pipeline.py\n[Observation] Bash Code 1: ERROR DETECTED.\n\nFileNotFoundError: [Errno 2] No such file or directory: 'employees.csv'")
+                st.session_state.devin_logs.append("[Self-Correction] Missing input dataset 'employees.csv'.")
+                st.session_state.devin_logs.append("[Planning Router] Inserting dynamic sub-task 'Task 1.5: Generate mock employees.csv' into plan DAG.")
+                st.session_state.devin_plan.insert(1, {"id": 1.5, "task": "Create mock employees.csv dataset file", "status": "pending"})
+                st.session_state.devin_insights.append("Insight: Employees CSV was absent in working folder. Formulated mock data creation.")
+
+            # Cycle 3: Generate CSV data
+            elif step == 3:
+                st.session_state.devin_plan[1]["status"] = "completed"
+                st.session_state.devin_logs.append("[Reasoning] Focal sub-task is Task 1.5: Create mock employees.csv.\n[Action] Creating CSV text representation...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ echo -e 'name,salary\\nAlice,5000\\nBob,6000' > employees.csv\n[Observation] Bash Code 0: CSV file generated successfully.")
+
+            # Cycle 4: Re-attempt Python (throws TypeError)
+            elif step == 4:
+                st.session_state.devin_logs.append("[Reasoning] Resuming Task 2: Verify processing engine compiles.\n[Action] Running Python script...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ python pipeline.py\n[Observation] Bash Code 1: TYPE EXCEPTION.\n\nTypeError: can only concatenate str (not \"int\") to str")
+                st.session_state.devin_logs.append("[Self-Correction] Script failed because salary was read as string, not parsed as int.")
+                st.session_state.devin_logs.append("[Planning Router] Inserting dynamic correction sub-task 'Task 1.8: Fix salary type casting' into plan DAG.")
+                st.session_state.devin_plan.insert(2, {"id": 1.8, "task": "Fix salary calculation type casting in pipeline.py (cast string column to integer)", "status": "pending"})
+                st.session_state.devin_insights.append("Insight: Type mismatch bug found. Implementing type conversion casting.")
+
+            # Cycle 5: Patch Pipeline code
+            elif step == 5:
+                st.session_state.devin_plan[2]["status"] = "completed"
+                st.session_state.devin_code = """with open('employees.csv', 'r') as f:
+    lines = f.readlines()
+salaries = [int(line.split(',')[1]) for line in lines[1:] if line.strip()]
+avg = sum(salaries) / len(salaries)
+print("Average Salary calculated:", avg)"""
+                st.session_state.devin_logs.append("[Reasoning] Focal task is Task 1.8: Fix salary type casting.\n[Action] Injecting integer type conversions into calculations...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ echo '...' > pipeline.py\n[Observation] Bash Code 0: Type delta successfully committed.")
+
+            # Cycle 6: Re-run script (Success)
+            elif step == 6:
+                st.session_state.devin_plan[3]["status"] = "completed"
+                st.session_state.devin_logs.append("[Reasoning] Re-evaluating Task 2: Verify data pipeline output results.\n[Action] Running Python executor...")
+                st.session_state.devin_logs.append("Executing Sandbox CLI:\n$ python pipeline.py\n[Observation] Bash Code 0: Script executed successfully.\nAverage Salary calculated: 5500.0")
+
+            # Cycle 7: Verify output stats (Finish)
+            elif step == 7:
+                st.session_state.devin_plan[4]["status"] = "completed"
+                st.session_state.devin_logs.append("[Reasoning] Task 2 completed. Commencing Task 3: Verify calculated statistics.\n[Action] Extracting Average Salary output...")
+                st.session_state.devin_logs.append("[Observation] Average Salary matches target check: 5500.0.")
+                st.session_state.devin_logs.append("[SUCCESS] Employee data cleaning pipeline executed successfully.")
             
     # Layout columns
     col_left, col_right = st.columns([1, 2])
@@ -466,11 +639,15 @@ if __name__ == '__main__':
         st.markdown(f'<div class="terminal-console">{terminal_txt}</div>', unsafe_allow_html=True)
         
         # Render IDE Editor
-        st.markdown("**Mock Editor IDE (`app.py`)**")
+        ide_filename = "app.py"
+        if st.session_state.current_devin_case == "Database Migration (SQLite)":
+            ide_filename = "db.py"
+        elif st.session_state.current_devin_case == "Data Pipeline (Pandas)":
+            ide_filename = "pipeline.py"
+            
+        st.markdown(f"**Mock Editor IDE (`{ide_filename}`)**")
         code_text = st.session_state.devin_code if st.session_state.devin_code else "# Editor buffer is empty"
         st.code(code_text, language="python")
-
-# ----------------- PAGE 3: PERPLEXITY SEARCH AGENT SIMULATION -----------------
 
 elif nav_selection == "🔍 Perplexity Search Agent":
     st.markdown('<div class="title-gradient">Perplexity Pro Search</div>', unsafe_allow_html=True)
@@ -479,101 +656,227 @@ elif nav_selection == "🔍 Perplexity Search Agent":
     # Perplexity Reset
     def perp_reset():
         st.session_state.perp_step = 0
-        st.session_state.perp_logs = []
+        st.session_state.perp_logs = ["System initialized. Awaiting search query initiation..."]
         st.session_state.perp_episodic_memory = {}
         st.session_state.perp_citations = []
         st.session_state.perp_gap_detected = False
         st.session_state.perp_answer = ""
-        st.session_state.perp_winner = None
-        st.session_state.perp_budget = None
+        st.session_state.perp_query = ""
+        if 'last_perp_query' in st.session_state:
+            st.session_state.last_perp_query = ""
 
     # UI Query Search Action
     query_input = st.text_input(
         "Ask a complex, multi-hop question:",
-        value="Who won the most Oscars in 2026, and what was their budget?",
+        value="what is the best solution for piracy and its technical importance?",
         placeholder="Type search topic..."
     )
     
-    col_run, col_reset = st.columns([1, 5])
-    with col_run:
-        run_search = st.button("Pro Search 🚀", use_container_width=True)
-    with col_reset:
-        st.button("Clear Cache 🔄", on_click=perp_reset)
+    # Auto-reset if query changes
+    if 'last_perp_query' not in st.session_state:
+        st.session_state.last_perp_query = ""
+    if query_input != st.session_state.last_perp_query:
+        st.session_state.last_perp_query = query_input
+        st.session_state.perp_step = 0
+        st.session_state.perp_logs = ["System initialized. Awaiting search query initiation..."]
+        st.session_state.perp_episodic_memory = {}
+        st.session_state.perp_citations = []
+        st.session_state.perp_gap_detected = False
+        st.session_state.perp_answer = ""
+        st.session_state.perp_query = query_input
+
+    def perp_next_step():
+        step = st.session_state.perp_step + 1
+        st.session_state.perp_step = step
         
-    if run_search or st.session_state.perp_step > 0:
-        if st.session_state.perp_step == 0:
-            st.session_state.perp_step = 1
+        # Capture the query to ensure stability during step-through
+        if step == 1:
+            st.session_state.perp_query = query_input
             
-            # Step 1: Semantic Query Parse
-            st.session_state.perp_logs.append("🔍 **Step 1: Semantic Intent Analysis**")
-            st.session_state.perp_logs.append("Decomposing complex query into sub-problems:\n- Sub-problem 1: Find the movie with the most Oscar wins in 2026.\n- Sub-problem 2: Find the budget of that specific Oscar winner.\nReasoning: Sub-problem 2 depends on the output of Sub-problem 1. Formulating sequential multi-hop search plan.")
-            st.session_state.perp_logs.append("Query formulation: stage 1 target term is `'2026 Oscar winners'`.")
+        query = st.session_state.perp_query
+        query_clean = query.lower().strip()
+        
+        # Determine Scenario
+        if "oscar" in query_clean or "dune" in query_clean:
+            scenario = "oscars"
+        elif "piracy" in query_clean or "solution" in query_clean:
+            scenario = "piracy"
+        else:
+            scenario = "fallback"
             
-            # Step 2: Actuate Primary Search & Scrape
+        # Step 1: Semantic Intent Analysis
+        if step == 1:
+            st.session_state.perp_logs = ["🔍 **Step 1: Semantic Intent Analysis**"]
+            if scenario == "oscars":
+                st.session_state.perp_logs.append("Decomposing complex query into sub-problems:\n- Sub-problem 1: Find the movie with the most Oscar wins in 2026.\n- Sub-problem 2: Find the budget of that specific Oscar winner.\nReasoning: Sub-problem 2 depends on the output of Sub-problem 1. Formulating sequential multi-hop search plan.")
+                st.session_state.perp_logs.append("Query formulation: stage 1 target term is `'2026 Oscar winners'`.")
+            elif scenario == "piracy":
+                st.session_state.perp_logs.append("Decomposing complex query into sub-problems:\n- Sub-problem 1: Identify key technical solutions for software/media piracy.\n- Sub-problem 2: Determine the technical importance of the best solution.\nReasoning: Identifying the 'best' solution requires establishing overview categories, then querying why its hardware enclaves are important. Formulating multi-hop search plan.")
+                st.session_state.perp_logs.append("Query formulation: stage 1 target term is `'piracy solutions'`.")
+            else:
+                keywords = [w for w in re.sub(r'[^a-zA-Z0-9 ]', '', query).split() if len(w) > 3]
+                kw1 = keywords[0] if len(keywords) > 0 else "technology"
+                kw2 = keywords[1] if len(keywords) > 1 else "implementation"
+                st.session_state.perp_logs.append(f"Decomposing complex query into sub-problems:\n- Sub-problem 1: Search overview facts for '{query}'.\n- Sub-problem 2: Identify structural importance of '{kw1}'.\nReasoning: Decomposing keyword concepts to build plan.")
+                st.session_state.perp_logs.append(f"Query formulation: stage 1 target term is `'{kw1}'`.")
+                
+        # Step 2: Actuating Primary Search & Web Crawling
+        elif step == 2:
             st.session_state.perp_logs.append("\n🌎 **Step 2: Actuating Primary Search & Web Crawling**")
             st.session_state.perp_logs.append("Launching parallel search engine index queries...")
-            time.sleep(0.5)
-            
-            results = WEB_INDEX["2026 Oscar winners"]
-            st.session_state.perp_logs.append(f"Search engines returned {len(results)} matches. Crawling URL payloads:")
-            for res in results:
-                st.session_state.perp_logs.append(f"  - Visited URL: `{res['url']}` (Scraped title: *\"{res['title']}\"*)")
-                st.session_state.perp_episodic_memory[res["url"]] = res["content"]
-                st.session_state.perp_citations.append(res["url"])
-                
-            # Step 3: Analysis of facts
+            if scenario == "oscars":
+                results = WEB_INDEX["2026 Oscar winners"]
+                st.session_state.perp_logs.append(f"Search engines returned {len(results)} matches. Crawling URL payloads:\n")
+                for res in results:
+                    st.session_state.perp_logs.append(f"Visited URL: {res['url']} (Scraped title: \"{res['title']}\")")
+                    st.session_state.perp_episodic_memory[res["url"]] = res["content"]
+                    st.session_state.perp_citations.append(res["url"])
+            elif scenario == "piracy":
+                results = WEB_INDEX["piracy solutions"]
+                st.session_state.perp_logs.append(f"Search engines returned {len(results)} matches. Crawling URL payloads:\n")
+                for res in results:
+                    st.session_state.perp_logs.append(f"Visited URL: {res['url']} (Scraped title: \"{res['title']}\")")
+                    st.session_state.perp_episodic_memory[res["url"]] = res["content"]
+                    st.session_state.perp_citations.append(res["url"])
+            else:
+                keywords = [w for w in re.sub(r'[^a-zA-Z0-9 ]', '', query).split() if len(w) > 3]
+                kw1 = keywords[0] if len(keywords) > 0 else "technology"
+                kw2 = keywords[1] if len(keywords) > 1 else "implementation"
+                url1 = f"https://tech-portal.org/search?q={kw1}"
+                url2 = f"https://encyclopedia-online.net/wiki/{kw2}"
+                st.session_state.perp_logs.append("Search engines returned 2 matches. Crawling URL payloads:\n")
+                st.session_state.perp_logs.append(f"Visited URL: {url1} (Scraped title: \"Overview of {kw1.capitalize()} and {kw2.capitalize()}\")")
+                st.session_state.perp_logs.append(f"Visited URL: {url2} (Scraped title: \"Semantic details for {query[:20]}...\")")
+                st.session_state.perp_episodic_memory[url1] = f"This reference provides general context on {kw1} systems. It details how they integrate into user environments."
+                st.session_state.perp_episodic_memory[url2] = f"This document covers the functional implementation of {kw2} systems and their common architecture."
+                st.session_state.perp_citations.append(url1)
+                st.session_state.perp_citations.append(url2)
+
+        # Step 3: Reasoning & Knowledge Synthesis
+        elif step == 3:
             st.session_state.perp_logs.append("\n🧠 **Step 3: Reasoning & Knowledge Synthesis**")
-            # Discover winner in logs
-            st.session_state.perp_winner = "Dune: Part Three"
-            st.session_state.perp_logs.append(f"Extracted fact: **Dune: Part Three** won 6 Oscars (most awards of the evening).")
-            st.session_state.perp_logs.append("Evaluating data completeness:\n- Oscar Winner: FOUND (Dune: Part Three)\n- Budget: MISSING (No budget metrics present in Variety or Hollywood Reporter contents).")
-            
-            # Step 4: Gap Detection & Dynamic query update
-            st.session_state.perp_gap_detected = True
-            secondary_term = "Dune: Part Three movie budget"
-            st.session_state.perp_logs.append(f"🚩 **[Gap Detected]** Secondary search query triggered: `{secondary_term}`")
-            
-            # Step 5: Actuate Secondary Search
+            if scenario == "oscars":
+                st.session_state.perp_logs.append("Extracted fact: Dune: Part Three won 6 Oscars (most awards of the evening).")
+                st.session_state.perp_logs.append("Evaluating data completeness:\n\nOscar Winner: FOUND (Dune: Part Three)\nBudget: MISSING (No budget metrics present in Variety or Hollywood Reporter contents).")
+                st.session_state.perp_logs.append("🚩 [Gap Detected] Secondary search query triggered: Dune: Part Three movie budget")
+                st.session_state.perp_gap_detected = True
+            elif scenario == "piracy":
+                st.session_state.perp_logs.append("Extracted fact: Hardware-backed DRM (Widevine L1) is identified as the most secure anti-piracy solution.")
+                st.session_state.perp_logs.append("Evaluating data completeness:\n\nBest Solution: FOUND (Widevine L1 enclaves)\nTechnical Importance Details: MISSING (Need detailed cryptographic isolation logic).")
+                st.session_state.perp_logs.append("🚩 [Gap Detected] Secondary search query triggered: technical importance of secure enclaves")
+                st.session_state.perp_gap_detected = True
+            else:
+                keywords = [w for w in re.sub(r'[^a-zA-Z0-9 ]', '', query).split() if len(w) > 3]
+                kw1 = keywords[0] if len(keywords) > 0 else "technology"
+                st.session_state.perp_logs.append("Evaluating data completeness:\n\nTopic overview: FOUND\nPractical engineering implications: MISSING.")
+                st.session_state.perp_logs.append(f"🚩 [Gap Detected] Secondary search query triggered: {kw1} technical engineering implications")
+                st.session_state.perp_gap_detected = True
+
+        # Step 4: Actuating Secondary Search & Web Crawling
+        elif step == 4:
             st.session_state.perp_logs.append("\n🌎 **Step 4: Actuating Secondary Search & Web Crawling**")
-            time.sleep(0.5)
-            sec_results = WEB_INDEX["Dune: Part Three movie budget"]
-            st.session_state.perp_logs.append(f"Crawl database returned {len(sec_results)} secondary matches. Fetching full HTML pages:")
-            for res in sec_results:
-                st.session_state.perp_logs.append(f"  - Visited URL: `{res['url']}` (Scraped title: *\"{res['title']}\"*)")
-                st.session_state.perp_episodic_memory[res["url"]] = res["content"]
-                st.session_state.perp_citations.append(res["url"])
-                
-            # Step 6: Synthesis
-            st.session_state.perp_budget = "$190 million"
+            if scenario == "oscars":
+                sec_results = WEB_INDEX["Dune: Part Three movie budget"]
+                st.session_state.perp_logs.append(f"Crawl database returned {len(sec_results)} secondary matches. Fetching full HTML pages:\n")
+                for res in sec_results:
+                    st.session_state.perp_logs.append(f"Visited URL: {res['url']} (Scraped title: \"{res['title']}\")")
+                    st.session_state.perp_episodic_memory[res["url"]] = res["content"]
+                    st.session_state.perp_citations.append(res["url"])
+            elif scenario == "piracy":
+                sec_results = WEB_INDEX["technical importance of secure enclaves"]
+                st.session_state.perp_logs.append(f"Crawl database returned {len(sec_results)} secondary matches. Fetching full HTML pages:\n")
+                for res in sec_results:
+                    st.session_state.perp_logs.append(f"Visited URL: {res['url']} (Scraped title: \"{res['title']}\")")
+                    st.session_state.perp_episodic_memory[res["url"]] = res["content"]
+                    st.session_state.perp_citations.append(res["url"])
+            else:
+                keywords = [w for w in re.sub(r'[^a-zA-Z0-9 ]', '', query).split() if len(w) > 3]
+                kw1 = keywords[0] if len(keywords) > 0 else "technology"
+                url3 = f"https://tech-reviewer.com/articles/{kw1}-impact"
+                st.session_state.perp_logs.append("Crawl database returned 1 secondary match. Fetching HTML page:")
+                st.session_state.perp_logs.append(f"Visited URL: {url3} (Scraped title: \"Analysis of {kw1.capitalize()} Systems\")")
+                st.session_state.perp_episodic_memory[url3] = f"Analyzing the engineering impact of {kw1} models. The technical importance resides in its modular flexibility and real-time execution speeds."
+                st.session_state.perp_citations.append(url3)
+
+        # Step 5: Final Joint Analysis & Citation Synthesis
+        elif step == 5:
             st.session_state.perp_logs.append("\n🧠 **Step 5: Final Joint Analysis & Citation Synthesis**")
             st.session_state.perp_logs.append("Joint correlation completed. Formatting output citing all crawled references...")
-            
-            st.session_state.perp_answer = f"""At the 98th Academy Awards in 2026, the movie that won the most Oscars was **Dune: Part Three**, taking home a total of **6 Oscars** including Best Director for Denis Villeneuve and sweeping the technical categories [1][2]. 
+            if scenario == "oscars":
+                st.session_state.perp_answer = """At the 98th Academy Awards in 2026, the movie that won the most Oscars was **Dune: Part Three**, taking home a total of **6 Oscars** including Best Director for Denis Villeneuve and sweeping the technical categories [1][2].
+The production budget for Dune: Part Three was approximately **190 million USD** [3][4], which was co-financed by Legendary Pictures and Warner Bros. The film proved to be a major financial success, grossing over 720 million worldwide [3]."""
+            elif scenario == "piracy":
+                st.session_state.perp_answer = """The best modern technical solution for preventing software and media piracy is **hardware-rooted DRM (such as Google Widevine L1)** combined with secure enclaves [1][2].
 
-The production budget for **Dune: Part Three** was approximately **$190 million USD** [3][4], which was co-financed by Legendary Pictures and Warner Bros. The film proved to be a major financial success, grossing over $720 million worldwide [3]."""
+The **technical importance** of this solution lies in its hardware-enforced isolation:
+1. **Isolated Cryptographic Registers**: The decryption keys and processes are executed inside isolated CPU enclaves, separating them entirely from the host operating system [3][4].
+2. **Preventing Memory Exploits**: Because the decryption happens at the hardware layer, OS-level debuggers, kernel hooks, or system memory dumps cannot read the raw cryptographic keys [3].
+3. **Untrusted Host Protection**: Even if the client device's operating system is completely compromised, the digital assets remain secure within the hardware trust boundary [4]."""
+            else:
+                keywords = [w for w in re.sub(r'[^a-zA-Z0-9 ]', '', query).split() if len(w) > 3]
+                kw1 = keywords[0] if len(keywords) > 0 else "technology"
+                st.session_state.perp_answer = f"""Regarding your query **\"{query}\"**, the research synthesizes the following findings:
 
-        # Display results UI
-        col_logs, col_synth = st.columns([1, 1])
+1. **Core Overview**: The architecture of **{kw1.capitalize()}** provides the fundamental framework for modern systems [1]. Its integration focuses on modular configurations to scale [2].
+2. **Technical Importance**: The main engineering importance resides in its **modular flexibility** and **real-time execution speeds** [3]. By decoupling parameters, it prevents state lock issues and allows systems to scale independently [3]."""
+
+    def perp_instant_resolve():
+        while st.session_state.perp_step < 5:
+            perp_next_step()
+
+    # Layout controls
+    col_btn1, col_btn2, col_btn3 = st.columns(3)
+    with col_btn1:
+        if st.session_state.perp_step == 0:
+            st.button("Start Pro Search 🚀", on_click=perp_next_step, use_container_width=True)
+        elif st.session_state.perp_step < 5:
+            st.button("Advance Search Step ➡️", on_click=perp_next_step, use_container_width=True)
+        else:
+            st.button("Search Complete ✅", disabled=True, use_container_width=True)
+    with col_btn2:
+        if st.session_state.perp_step > 0 and st.session_state.perp_step < 5:
+            st.button("Instant Resolve ⚡", on_click=perp_instant_resolve, use_container_width=True)
+        else:
+            st.button("Instant Resolve ⚡", disabled=True, use_container_width=True)
+    with col_btn3:
+        st.button("Reset Simulator 🔄", on_click=perp_reset, use_container_width=True)
         
-        with col_logs:
-            st.subheader("⚙️ Pro Search Execution Trace")
-            logs_txt = "\n".join(st.session_state.perp_logs)
-            st.markdown(f'<div class="terminal-console" style="height: 480px;">{logs_txt}</div>', unsafe_allow_html=True)
-            
-        with col_synth:
-            st.subheader("✨ Synthesized Search Response")
+    if st.session_state.perp_step == 0:
+        st.caption("Click 'Start Pro Search 🚀' to begin the step-by-step multi-hop search simulation.")
+    elif st.session_state.perp_step >= 5:
+        st.success("🎉 Search complete! Output synthesized using cross-reference citations.")
+
+    # Display results UI
+    col_logs, col_synth = st.columns([1, 1])
+    
+    with col_logs:
+        st.subheader("⚙️ Pro Search Execution Trace")
+        logs_txt = "\n".join(st.session_state.perp_logs)
+        st.markdown(f'<div class="terminal-console" style="height: 480px;">{logs_txt}</div>', unsafe_allow_html=True)
+        
+    with col_synth:
+        st.subheader("✨ Synthesized Search Response")
+        if st.session_state.perp_step >= 5:
             st.markdown(f'<div class="card" style="min-height: 250px;">{st.session_state.perp_answer}</div>', unsafe_allow_html=True)
-            
-            st.subheader("🔗 Visited Sources")
+        else:
+            st.markdown(f'<div class="card" style="min-height: 250px; color: #718096; display: flex; align-items: center; justify-content: center;">Awaiting synthesis completion... (Step {st.session_state.perp_step}/5)</div>', unsafe_allow_html=True)
+        
+        st.subheader("🔗 Visited Sources")
+        if st.session_state.perp_citations:
             for i, url in enumerate(st.session_state.perp_citations):
                 st.markdown(f"**[{i+1}]** `{url}`")
-                
-            # Mock Scraped Snippets Cards
-            with st.expander("📂 Cached Web Data in Episodic Memory"):
+        else:
+            st.caption("No sources visited yet in this cycle.")
+            
+        # Mock Scraped Snippets Cards
+        with st.expander("📂 Cached Web Data in Episodic Memory"):
+            if st.session_state.perp_episodic_memory:
                 for url, content in st.session_state.perp_episodic_memory.items():
                     st.caption(f"**Source**: {url}")
                     st.write(content)
                     st.divider()
+            else:
+                st.caption("Episodic memory cache is currently empty.")
 
 # ----------------- PAGE 4: LAB SESSIONS (L1.1 & L1.2) -----------------
 elif nav_selection == "🧪 Lab Sessions (L1.1 & L1.2)":
