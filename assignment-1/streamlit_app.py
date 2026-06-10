@@ -264,6 +264,16 @@ if nav_selection == "📊 Architecture Comparison":
     st.markdown('<div class="title-gradient">Agent Architecture Lab</div>', unsafe_allow_html=True)
     st.markdown('<div class="subtitle-text">A rigorous comparative analysis of Devin (Action-Oriented Task Solver) and Perplexity Pro Search (Information Synthesizer)</div>', unsafe_allow_html=True)
     
+    with st.expander("📖 User Guide: How to Interpret the Architectures", expanded=False):
+        st.markdown("""
+        ### 💡 Key Concepts
+        * **Devin (Stateful Coder)**: Executes scripts, tracks compiler errors, and writes local files inside a container environment.
+        * **Perplexity (Search Synthesizer)**: Searches queries in parallel, detects missing information gaps, and compiles cited markdown answers.
+        ### 🛠️ Interactive Exploration
+        * Review the side-by-side **System Integration Schematics** mapping sensor-actuator loops.
+        * Compare architectural details in the **PEAS Dimension Comparison** table at the bottom of the page.
+        """)
+        
     col1, col2 = st.columns(2)
     
     with col1:
@@ -360,6 +370,17 @@ elif nav_selection == "💻 Devin Task Agent":
     st.markdown('<div class="title-gradient">Devin Task Sandbox</div>', unsafe_allow_html=True)
     st.markdown('<div class="subtitle-text">Interactive Simulation of Devin\'s ReAct Loop & Autonomous Error Self-Correction</div>', unsafe_allow_html=True)
     
+    with st.expander("📖 User Guide: Sandbox Simulator Controls", expanded=False):
+        st.markdown("""
+        ### 💡 Key Concepts
+        * **ReAct Loop**: Iterative execution of *Thought*, *Action*, and *Observation*.
+        * **Self-Correction**: The agent catches run-time bugs (e.g. missing files, type mismatch) and dynamically modifies its plan DAG.
+        ### 🛠️ Step-by-Step Instructions
+        1. **Select a Scenario** from the drop-down (e.g. *Flask Web Deployment*, *SQLite Database*, *Pandas Pipeline*).
+        2. Click **Advance Loop Cycle ➡️** to step through. Watch the checklist status, bash console logs, and Mock IDE code buffer update dynamically.
+        3. Click **Reset Container 🔄** to clear the sandbox state.
+        """)
+        
     # Scenario Selector
     devin_case_select = st.selectbox(
         "Select Sandbox Scenario:",
@@ -653,6 +674,18 @@ elif nav_selection == "🔍 Perplexity Search Agent":
     st.markdown('<div class="title-gradient">Perplexity Pro Search</div>', unsafe_allow_html=True)
     st.markdown('<div class="subtitle-text">Interactive Simulation of Parallel Search, HTML Scraping, Information-Gap Detection, and Source Citation Synthesizer</div>', unsafe_allow_html=True)
     
+    with st.expander("📖 User Guide: Multi-Hop Search Walkthrough", expanded=False):
+        st.markdown("""
+        ### 💡 Key Concepts
+        * **Semantic Parsing**: Decomposing a complex user query into independent sub-problems.
+        * **Gap Detection**: Evaluating whether primary crawl results contain all necessary details, and triggering secondary searches if needed.
+        ### 🛠️ Step-by-Step Instructions
+        1. **Type a Question** in the search field (e.g. the default piracy question or Oscar wins question).
+        2. Click **Start Pro Search 🚀** to parse the semantic intent.
+        3. Step through using **Advance Search Step ➡️** or complete instantly using **Instant Resolve ⚡**.
+        4. Review the final response with cited numbers, the clickable visited sources, and the cached memory drawer.
+        """)
+    
     # Perplexity Reset
     def perp_reset():
         st.session_state.perp_step = 0
@@ -882,6 +915,17 @@ The **technical importance** of this solution lies in its hardware-enforced isol
 elif nav_selection == "🧪 Lab Sessions (L1.1 & L1.2)":
     st.markdown('<div class="title-gradient">Module 1 Lab Sessions</div>', unsafe_allow_html=True)
     st.markdown('<div class="subtitle-text">Interactive Execution & Study of Labs L1.1 (Minimal ReAct Agent) and L1.2 (LangChain vs LlamaIndex)</div>', unsafe_allow_html=True)
+    
+    with st.expander("📖 User Guide: Interactive Agent Lab Playground", expanded=False):
+        st.markdown("""
+        ### 💡 Key Concepts
+        * **Lab 1.1**: Demonstrates a simple python implementation of the ReAct (Reason + Action) loop using arithmetic and mock web searches.
+        * **Lab 1.2**: Focuses on comparing the coding models of LangChain (flow orchestration) versus LlamaIndex (data indexing).
+        ### 🛠️ How to Play with Lab 1.1
+        1. Input a combined calculation and search task (e.g. `Calculate (45 * 2) - 10 and find the capital of Italy.`).
+        2. Click **Run ReAct Loop 🚀** to execute the loop.
+        3. View the generated cycle execution logs and final response.
+        """)
     
     tab1, tab2 = st.tabs(["🧪 Lab 1.1: Minimal ReAct", "🧪 Lab 1.2: LangChain vs LlamaIndex"])
     
