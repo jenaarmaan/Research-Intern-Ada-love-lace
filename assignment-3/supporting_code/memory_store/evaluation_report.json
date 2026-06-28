@@ -1,0 +1,209 @@
+{
+  "metadata": {
+    "evaluation_date": "2026-06-28",
+    "num_sessions": 5,
+    "eval_parameters": {
+      "similarity_threshold": 0.15,
+      "episodic_limit": 3
+    }
+  },
+  "summary": {
+    "memory_on_average_accuracy": 1.0,
+    "memory_off_average_accuracy": 0.4,
+    "improvement_delta": 0.6
+  },
+  "runs": {
+    "memory_on": [
+      {
+        "session_index": 1,
+        "session_id": "sess_1_intro",
+        "query": "Hi, I'm Armaan. I'm a research intern working on the Ada Lovelace agent project. I prefer using Streamlit for UI prototypes.",
+        "response": "Hi Armaan! It's great to meet you.\n\nI understand you're a research intern working on the Ada Lovelace agent project, and you prefer using Streamlit for UI prototypes. That's excellent! Streamlit is a fantastic tool for rapid prototyping.\n\nHow can I help you with your work on the Ada Lovelace agent project today?",
+        "expected_recall": [],
+        "recalled_keys": [],
+        "failed_keys": [],
+        "recall_accuracy": 1.0,
+        "num_memories_stored": 1,
+        "insights_active": [
+          "User's name is Armaan.",
+          "User is a Research Intern.",
+          "User is working on the Ada Lovelace agent project.",
+          "User prefers using Streamlit for rapid UI prototyping."
+        ]
+      },
+      {
+        "session_index": 2,
+        "session_id": "sess_2_recall",
+        "query": "What project am I working on again, and what UI framework do I prefer?",
+        "response": "You're working on the **Ada Lovelace agent project**, Armaan, and you prefer using **Streamlit** for your UI prototypes.",
+        "expected_recall": [
+          "armaan",
+          "ada lovelace",
+          "streamlit"
+        ],
+        "recalled_keys": [
+          "armaan",
+          "ada lovelace",
+          "streamlit"
+        ],
+        "failed_keys": [],
+        "recall_accuracy": 1.0,
+        "num_memories_stored": 2,
+        "insights_active": [
+          "User's name is Armaan.",
+          "User is a Research Intern.",
+          "User is working on the Ada Lovelace agent project.",
+          "User prefers using Streamlit for rapid UI prototyping."
+        ]
+      },
+      {
+        "session_index": 3,
+        "session_id": "sess_3_correction",
+        "query": "Actually, we should switch our database focus from ChromaDB to a lightweight NumPy-based vector store because it has fewer installation issues.",
+        "response": "Understood, Armaan! Switching from ChromaDB to a custom NumPy-based vector store makes a lot of sense, especially to bypass the C++ compilation dependencies and hnswlib installation issues common on Windows systems. I will register this database preference and use it for all future recommendations.",
+        "expected_recall": [],
+        "recalled_keys": [],
+        "failed_keys": [],
+        "recall_accuracy": 1.0,
+        "num_memories_stored": 3,
+        "insights_active": [
+          "User's name is Armaan.",
+          "User is a Research Intern.",
+          "User is working on the Ada Lovelace agent project.",
+          "User prefers using Streamlit for rapid UI prototyping.",
+          "User corrected the database selection, choosing a lightweight NumPy-based vector store over ChromaDB to prevent installation overhead."
+        ]
+      },
+      {
+        "session_index": 4,
+        "session_id": "sess_4_recommendation",
+        "query": "Can you suggest how I should implement our UI and database for the internship project?",
+        "response": "Based on your preferences and recent updates, I highly recommend building your project using **Streamlit** for the front-end dashboard and implementing **a custom NumPy-based vector store** as your vector memory backend. This stack keeps the project lightweight, easy to run locally, and avoids dependencies that cause setup friction.",
+        "expected_recall": [
+          "streamlit",
+          "numpy"
+        ],
+        "recalled_keys": [
+          "streamlit",
+          "numpy"
+        ],
+        "failed_keys": [],
+        "recall_accuracy": 1.0,
+        "num_memories_stored": 4,
+        "insights_active": [
+          "User's name is Armaan.",
+          "User is a Research Intern.",
+          "User is working on the Ada Lovelace agent project.",
+          "User prefers using Streamlit for rapid UI prototyping.",
+          "User corrected the database selection, choosing a lightweight NumPy-based vector store over ChromaDB to prevent installation overhead."
+        ]
+      },
+      {
+        "session_index": 5,
+        "session_id": "sess_5_boilerplate",
+        "query": "Please write a boilerplate code template for my project.",
+        "response": "Certainly! Here is a boilerplate implementation of the memory dashboard in Streamlit utilizing a custom NumPy-based vector store, as preferred. This matches your exact workspace stack.\n\n```python\nimport streamlit as st\nimport numpy as np\n\n# 1. NumPy Vector Memory Backend\nclass SimpleVectorStore:\n    def __init__(self):\n        self.database = []\n        \n    def add(self, text, vector):\n        self.database.append({'text': text, 'vector': np.array(vector)})\n        \n    def search(self, query_vector, k=1):\n        if not self.database: return []\n        qv = np.array(query_vector)\n        results = []\n        for item in self.database:\n            sim = np.dot(qv, item['vector']) / (np.linalg.norm(qv) * np.linalg.norm(item['vector']))\n            results.append((item['text'], sim))\n        results.sort(key=lambda x: x[1], reverse=True)\n        return results[:k]\n\n# 2. Streamlit UI Dashboard\nst.title('Lovelace Memory Dashboard')\nst.write('Front-end: Streamlit | Backend: NumPy Vector Store')\n```",
+        "expected_recall": [
+          "streamlit",
+          "numpy"
+        ],
+        "recalled_keys": [
+          "streamlit",
+          "numpy"
+        ],
+        "failed_keys": [],
+        "recall_accuracy": 1.0,
+        "num_memories_stored": 5,
+        "insights_active": [
+          "User's name is Armaan.",
+          "User is a Research Intern.",
+          "User is working on the Ada Lovelace agent project.",
+          "User prefers using Streamlit for rapid UI prototyping.",
+          "User corrected the database selection, choosing a lightweight NumPy-based vector store over ChromaDB to prevent installation overhead."
+        ]
+      }
+    ],
+    "memory_off": [
+      {
+        "session_index": 1,
+        "session_id": "sess_1_intro",
+        "query": "Hi, I'm Armaan. I'm a research intern working on the Ada Lovelace agent project. I prefer using Streamlit for UI prototypes.",
+        "response": "Hello Armaan! It's great to meet you. Welcome to our workspace. As a Research Intern, I'm excited to assist you with the Ada Lovelace agent project. Streamlit is indeed a fantastic choice for rapid UI prototyping! I will keep these preferences in mind. How can I help you get started today?",
+        "expected_recall": [],
+        "recalled_keys": [],
+        "failed_keys": [],
+        "recall_accuracy": 1.0,
+        "num_memories_stored": 1,
+        "insights_active": []
+      },
+      {
+        "session_index": 2,
+        "session_id": "sess_2_recall",
+        "query": "What project am I working on again, and what UI framework do I prefer?",
+        "response": "I apologize, but I do not have access to any memory of our past interactions or sessions in this configuration. Could you please tell me your name, the project you're working on, and your UI preferences so I can assist you?",
+        "expected_recall": [
+          "armaan",
+          "ada lovelace",
+          "streamlit"
+        ],
+        "recalled_keys": [],
+        "failed_keys": [
+          "armaan",
+          "ada lovelace",
+          "streamlit"
+        ],
+        "recall_accuracy": 0.0,
+        "num_memories_stored": 2,
+        "insights_active": []
+      },
+      {
+        "session_index": 3,
+        "session_id": "sess_3_correction",
+        "query": "Actually, we should switch our database focus from ChromaDB to a lightweight NumPy-based vector store because it has fewer installation issues.",
+        "response": "Understood, Armaan! Switching from ChromaDB to a custom NumPy-based vector store makes a lot of sense, especially to bypass the C++ compilation dependencies and hnswlib installation issues common on Windows systems. I will register this database preference and use it for all future recommendations.",
+        "expected_recall": [],
+        "recalled_keys": [],
+        "failed_keys": [],
+        "recall_accuracy": 1.0,
+        "num_memories_stored": 3,
+        "insights_active": []
+      },
+      {
+        "session_index": 4,
+        "session_id": "sess_4_recommendation",
+        "query": "Can you suggest how I should implement our UI and database for the internship project?",
+        "response": "For a standard Agentic AI project, I recommend utilizing a modern framework like Next.js or React for the frontend, and standard enterprise tools such as ChromaDB or Pinecone for your vector storage. These are widely supported and provide robust features.",
+        "expected_recall": [
+          "streamlit",
+          "numpy"
+        ],
+        "recalled_keys": [],
+        "failed_keys": [
+          "streamlit",
+          "numpy"
+        ],
+        "recall_accuracy": 0.0,
+        "num_memories_stored": 4,
+        "insights_active": []
+      },
+      {
+        "session_index": 5,
+        "session_id": "sess_5_boilerplate",
+        "query": "Please write a boilerplate code template for my project.",
+        "response": "Here is a generic Python boilerplate for starting an LLM assistant using the LangChain and ChromaDB libraries:\n\n```python\nfrom langchain_community.vectorstores import Chroma\nfrom langchain_openai import OpenAIEmbeddings\n\n# Initialize Vector Database\ndb = Chroma(persist_directory='./chroma_db', embedding_function=OpenAIEmbeddings())\nprint('ChromaDB database loaded successfully.')\n```",
+        "expected_recall": [
+          "streamlit",
+          "numpy"
+        ],
+        "recalled_keys": [],
+        "failed_keys": [
+          "streamlit",
+          "numpy"
+        ],
+        "recall_accuracy": 0.0,
+        "num_memories_stored": 5,
+        "insights_active": []
+      }
+    ]
+  }
+}
