@@ -1,6 +1,7 @@
 import streamlit as st
 import os
 import sys
+import time
 import json
 import numpy as np
 import pandas as pd
@@ -10,7 +11,7 @@ import matplotlib.pyplot as plt
 # Ensure supporting_code is in the python path
 sys.path.append(os.path.join(os.path.dirname(__file__), "supporting_code"))
 
-from memory_agent import PersonalAssistantAgent, VectorEpisodicMemory, ReflectionEngine, gemini_available
+from memory_agent import PersonalAssistantAgent, VectorEpisodicMemory, ReflectionEngine, gemini_available, api_key
 from lab_runners import ContextManager, VectorMemoryShowcase, ConceptKnowledgeGraph
 from evaluation import MemoryEvaluator
 
