@@ -1,0 +1,108 @@
+{
+  "metadata": {
+    "evaluation_date": "2026-06-28",
+    "num_benchmarks": 5,
+    "offline_mode": true
+  },
+  "summary": {
+    "correction_off_success_rate": 20.0,
+    "correction_on_success_rate": 100.0,
+    "improvement_delta": 80.0
+  },
+  "runs": {
+    "correction_off": [
+      {
+        "name": "Fibonacci & Prime Checker Library",
+        "success": false,
+        "iterations": 0,
+        "files": [
+          "math_lib.py",
+          "test_math.py"
+        ]
+      },
+      {
+        "name": "RPN Stack Calculator",
+        "success": true,
+        "iterations": 0,
+        "files": [
+          "rpn.py",
+          "test_rpn.py"
+        ]
+      },
+      {
+        "name": "Text File Analyzer & Word Counter",
+        "success": false,
+        "iterations": 0,
+        "files": [
+          "text_analyzer.py",
+          "test_analyzer.py"
+        ]
+      },
+      {
+        "name": "JSON Key-Value Store",
+        "success": false,
+        "iterations": 0,
+        "files": [
+          "json_db.py",
+          "test_db.py"
+        ]
+      },
+      {
+        "name": "Temperature Unit Converter",
+        "success": false,
+        "iterations": 0,
+        "files": [
+          "temp_converter.py",
+          "test_temp.py"
+        ]
+      }
+    ],
+    "correction_on": [
+      {
+        "name": "Fibonacci & Prime Checker Library",
+        "success": true,
+        "iterations": 1,
+        "files": [
+          "math_lib.py",
+          "test_math.py"
+        ]
+      },
+      {
+        "name": "RPN Stack Calculator",
+        "success": true,
+        "iterations": 0,
+        "files": [
+          "rpn.py",
+          "test_rpn.py"
+        ]
+      },
+      {
+        "name": "Text File Analyzer & Word Counter",
+        "success": true,
+        "iterations": 1,
+        "files": [
+          "text_analyzer.py",
+          "test_analyzer.py"
+        ]
+      },
+      {
+        "name": "JSON Key-Value Store",
+        "success": true,
+        "iterations": 1,
+        "files": [
+          "json_db.py",
+          "test_db.py"
+        ]
+      },
+      {
+        "name": "Temperature Unit Converter",
+        "success": true,
+        "iterations": 1,
+        "files": [
+          "temp_converter.py",
+          "test_temp.py"
+        ]
+      }
+    ]
+  }
+}
