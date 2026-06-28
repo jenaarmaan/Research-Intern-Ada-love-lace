@@ -160,12 +160,13 @@ if new_session_btn:
     st.sidebar.success("Session ID updated!")
 
 # Main Tabs Setup
-tab_chat, tab_walkthrough, tab_inspector, tab_eval, tab_labs = st.tabs([
+tab_chat, tab_walkthrough, tab_inspector, tab_eval, tab_labs, tab_docs = st.tabs([
     "💬 Interactive Assistant", 
     "📈 Multi-Session Demo Walkthrough", 
     "🔍 Memory & Insights Inspector", 
     "📊 Evaluation Sandbox",
-    "🧪 Lab Playground (L3.1 - L3.3)"
+    "🧪 Lab Playground (L3.1 - L3.3)",
+    "📖 User Manual & Docs"
 ])
 
 # --- Tab 1: Interactive Assistant ---
@@ -589,3 +590,117 @@ with tab_labs:
             
             if os.path.exists(img_path):
                 st.image(img_path, caption="Active Memory-Augmented Knowledge Graph Visualization")
+
+# --- Tab 6: User Manual & Docs ---
+with tab_docs:
+    st.markdown('<div class="gradient-subheader">📚 Personal Assistant System User Manual</div>', unsafe_allow_html=True)
+    st.write("Module 3 Lab System: Persistent Vector-Based Episodic Memory, Reflection Profiling & Automated Evaluator.")
+    st.write("")
+    
+    st.markdown("""
+    <div class="glass-panel" style="margin-bottom: 25px; border-left: 5px solid #00f0ff;">
+        <h4 style="color: #00f0ff; margin-top: 0; font-family: 'Outfit';">🚀 System Quickstart Guide</h4>
+        <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6;">
+            Welcome to the <strong>Memory-Augmented Personal Assistant Dashboard</strong>. This dashboard provides 
+            interactive visualization controls for three core memory systems: sliding context summarization (L3.1), 
+            persistent JSON vector database retrieval (L3.2), and NetworkX relationship graphs (L3.3).
+        </p>
+        <ol style="color: #cbd5e1; font-size: 0.92rem; padding-left: 20px; line-height: 1.6;">
+            <li><strong>Interactive Chat</strong>: Send queries in the first tab and toggle the <em>"Enable Memory Engine"</em> checkbox in the sidebar to test zero-shot vs memory-augmented performance.</li>
+            <li><strong>Guided Walkthrough</strong>: Run the 5-step scenario sequence in the second tab to see the agent learn and self-correct over session boundaries.</li>
+            <li><strong>Database Inspector</strong>: Inspect the raw content of committed episodic logs and derived profile insights in the third tab.</li>
+            <li><strong>Evaluation Sandbox</strong>: Run a head-to-head metric benchmark test comparing accuracy parameters.</li>
+            <li><strong>Lab Sandbox</strong>: Play with individual vector cosine calculations and relationship link creators in the fifth tab.</li>
+        </ol>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col_d3_left, col_d3_right = st.columns([1, 1])
+    
+    with col_d3_left:
+        st.markdown("""
+        <div class="glass-panel" style="min-height: 420px; margin-bottom: 20px;">
+            <h4 style="color: #00f0ff; margin-top: 0; font-family: 'Outfit';">🧠 Cognitive Memory Hierarchy</h4>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5;">
+                The assistant implements a three-tier human-inspired cognitive structure:
+            </p>
+            <ul style="color: #cbd5e1; font-size: 0.88rem; padding-left: 20px; line-height: 1.5; margin-bottom: 12px;">
+                <li><strong>Short-Term Working Memory</strong>: Standard sliding list of active conversation turns. Summarizes/compresses older turns when threshold limit is exceeded.</li>
+                <li><strong>Long-Term Episodic Memory</strong>: Persistent JSON database indexing text chunks and dense float vectors. Computes cosine similarity values for prompt injection.</li>
+                <li><strong>Reflection Insights (Semantic Memory)</strong>: Asynchronous pipeline summarizing historical logs into high-level facts. Injected directly into prompt instructions.</li>
+            </ul>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5;">
+                This combination ensures the agent scales cleanly, reduces token costs, and retains preferences indefinitely.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="glass-panel" style="min-height: 300px;">
+            <h4 style="color: #ff4b4b; margin-top: 0; font-family: 'Outfit';">📡 Self-Healing & Sandbox Fallback</h4>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5;">
+                If Gemini API connections fail, throw HTTP 429 Rate Limits, or are disabled:
+            </p>
+            <ul style="color: #cbd5e1; font-size: 0.88rem; padding-left: 20px; line-height: 1.5;">
+                <li>The agent automatically degrades gracefully into a local, deterministic sandbox.</li>
+                <li>Uses an offline <strong>Character-Hash Semantic Embedding</strong> vectorizer.</li>
+                <li>Infers facts using string keyword extraction rules.</li>
+                <li>Allows the entire suite of coursework requirements to execute offline.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    with col_d3_right:
+        st.markdown("""
+        <div class="glass-panel" style="min-height: 420px; margin-bottom: 20px;">
+            <h4 style="color: #ffd700; margin-top: 0; font-family: 'Outfit';">🧪 Lab Coursework Specifications</h4>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5;">
+                Detailed specifications for the coursework labs in this dashboard:
+            </p>
+            <ol style="color: #cbd5e1; font-size: 0.88rem; padding-left: 20px; line-height: 1.5;">
+                <li style="margin-bottom: 6px;">
+                    <strong>Lab 3.1: sliding Context Summarizer</strong><br>
+                    <span style="font-size: 0.82rem; color: #8892b0;">Monitors active session log lengths. Compresses overflow turns to a single summary paragraph using generative templates.</span>
+                </li>
+                <li style="margin-bottom: 6px;">
+                    <strong>Lab 3.2: persistent Vector Storage</strong><br>
+                    <span style="font-size: 0.82rem; color: #8892b0;">Saves user preferences as document keys. Computes cosine dot products to locate similar text blocks in persistent file logs.</span>
+                </li>
+                <li style="margin-bottom: 6px;">
+                    <strong>Lab 3.3: NetworkX Knowledge Graph</strong><br>
+                    <span style="font-size: 0.82rem; color: #8892b0;">Maps logical links (WORK_ON, PREFER_UI) between entities. Generates a network diagram using Matplotlib and displays it on-screen.</span>
+                </li>
+            </ol>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="glass-panel" style="min-height: 300px;">
+            <h4 style="color: #00ff66; margin-top: 0; font-family: 'Outfit';">📑 Benchmarking & Verification</h4>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; color: #cbd5e1; margin-top: 10px;">
+                <tr style="border-bottom: 1px solid #2d313f;">
+                    <th style="text-align: left; padding: 6px 0; color: #8892b0;">Method</th>
+                    <th style="text-align: left; padding: 6px 0; color: #8892b0;">Goal / Metric</th>
+                </tr>
+                <tr style="border-bottom: 1px solid #2d313f;">
+                    <td style="padding: 6px 0;">Sequence Evaluation</td>
+                    <td style="padding: 6px 0; color: #00ff66;">5-session profile consistency test</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #2d313f;">
+                    <td style="padding: 6px 0;">Offline Fallback</td>
+                    <td style="padding: 6px 0; color: #00ff66;">Hash vectorizer dot product matches</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #2d313f;">
+                    <td style="padding: 6px 0;">L3.1 Summarization</td>
+                    <td style="padding: 6px 0; color: #00ff66;">Dynamic ratio reduction metric (0-100%)</td>
+                </tr>
+                <tr>
+                    <td style="padding: 6px 0;">Command Line Suite</td>
+                    <td style="padding: 6px 0; color: #00f0ff;"><code>python supporting_code/evaluation.py</code></td>
+                </tr>
+            </table>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.write("")
+    st.info("💡 Pro-Tip: Switch to the other tabs above to interact with the assistant or visualizers.")
