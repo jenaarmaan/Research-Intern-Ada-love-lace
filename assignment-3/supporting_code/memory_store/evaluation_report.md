@@ -21,7 +21,7 @@ This report evaluates the performance of the **Memory-Augmented Personal Assista
 ## Detailed Session Walkthrough
 
 ### Session 1: sess_1_intro
-* **User Query**: "Hi, I'm Armaan. I'm a research intern working on the Ada Lovelace agent project. I prefer using Streamlit for UI prototypes."
+* **User Query**: "Hi, I'm Armaan. I'm a research intern working on the Agentic AI project. I prefer using Streamlit for UI prototypes."
 * **Expected Context Retrieval**: `[]`
 
 #### Memory-ON Mode
@@ -29,33 +29,33 @@ This report evaluates the performance of the **Memory-Augmented Personal Assista
 * **Agent Response**:
   > Hi Armaan! It's great to meet you.
 > 
-> I understand you're a research intern working on the Ada Lovelace agent project, and you prefer using Streamlit for UI prototypes. That's excellent! Streamlit is a fantastic tool for rapid prototyping.
+> I understand you're a research intern working on the Agentic AI project, and you prefer using Streamlit for UI prototypes. That's excellent! Streamlit is a fantastic tool for rapid prototyping.
 > 
-> How can I help you with your work on the Ada Lovelace agent project today?
+> How can I help you with your work on the Agentic AI project today?
 * **Active Insights**:
   - User's name is Armaan.
   - User is a Research Intern.
-  - User is working on the Ada Lovelace agent project.
+  - User is working on the Agentic AI project.
   - User prefers using Streamlit for rapid UI prototyping.
 
 #### Memory-OFF Mode
 * **Recall Accuracy**: `100%`
 * **Agent Response**:
-  > Hello Armaan! It's great to meet you. Welcome to our workspace. As a Research Intern, I'm excited to assist you with the Ada Lovelace agent project. Streamlit is indeed a fantastic choice for rapid UI prototyping! I will keep these preferences in mind. How can I help you get started today?
+  > Hello Armaan! It's great to meet you. Welcome to our workspace. As a Research Intern, I'm excited to assist you with the Agentic AI project. Streamlit is indeed a fantastic choice for rapid UI prototyping! I will keep these preferences in mind. How can I help you get started today?
 
 ---
 ### Session 2: sess_2_recall
 * **User Query**: "What project am I working on again, and what UI framework do I prefer?"
-* **Expected Context Retrieval**: `['armaan', 'ada lovelace', 'streamlit']`
+* **Expected Context Retrieval**: `['armaan', 'agentic ai', 'streamlit']`
 
 #### Memory-ON Mode
-* **Recall Accuracy**: `100%` (Recalled: `['armaan', 'ada lovelace', 'streamlit']`, Missed: `[]`)
+* **Recall Accuracy**: `100%` (Recalled: `['armaan', 'agentic ai', 'streamlit']`, Missed: `[]`)
 * **Agent Response**:
-  > You're working on the **Ada Lovelace agent project**, Armaan, and you prefer using **Streamlit** for your UI prototypes.
+  > You're working on the **Agentic AI project**, Armaan, and you prefer using **Streamlit** for your UI prototypes.
 * **Active Insights**:
   - User's name is Armaan.
   - User is a Research Intern.
-  - User is working on the Ada Lovelace agent project.
+  - User is working on the Agentic AI project.
   - User prefers using Streamlit for rapid UI prototyping.
 
 #### Memory-OFF Mode
@@ -75,7 +75,7 @@ This report evaluates the performance of the **Memory-Augmented Personal Assista
 * **Active Insights**:
   - User's name is Armaan.
   - User is a Research Intern.
-  - User is working on the Ada Lovelace agent project.
+  - User is working on the Agentic AI project.
   - User prefers using Streamlit for rapid UI prototyping.
   - User corrected the database selection, choosing a lightweight NumPy-based vector store over ChromaDB to prevent installation overhead.
 
@@ -96,7 +96,7 @@ This report evaluates the performance of the **Memory-Augmented Personal Assista
 * **Active Insights**:
   - User's name is Armaan.
   - User is a Research Intern.
-  - User is working on the Ada Lovelace agent project.
+  - User is working on the Agentic AI project.
   - User prefers using Streamlit for rapid UI prototyping.
   - User corrected the database selection, choosing a lightweight NumPy-based vector store over ChromaDB to prevent installation overhead.
 
@@ -138,13 +138,13 @@ This report evaluates the performance of the **Memory-Augmented Personal Assista
 >         return results[:k]
 > 
 > # 2. Streamlit UI Dashboard
-> st.title('Lovelace Memory Dashboard')
+> st.title('Memory Dashboard')
 > st.write('Front-end: Streamlit | Backend: NumPy Vector Store')
 > ```
 * **Active Insights**:
   - User's name is Armaan.
   - User is a Research Intern.
-  - User is working on the Ada Lovelace agent project.
+  - User is working on the Agentic AI project.
   - User prefers using Streamlit for rapid UI prototyping.
   - User corrected the database selection, choosing a lightweight NumPy-based vector store over ChromaDB to prevent installation overhead.
 

@@ -256,8 +256,8 @@ class ReflectionEngine:
             inferred.append("User is a Research Intern.")
             
         # Project detection
-        if "ada lovelace agent" in all_text or "ada lovelace" in all_text:
-            inferred.append("User is working on the Ada Lovelace agent project.")
+        if "agentic ai project" in all_text or "agentic ai" in all_text:
+            inferred.append("User is working on the Agentic AI project.")
             
         # UI preference
         if "streamlit" in all_text:
@@ -385,7 +385,7 @@ class PersonalAssistantAgent:
         if "hi, i'm armaan" in q_clean or "my name is armaan" in q_clean:
             return (
                 "Hello Armaan! It's great to meet you. Welcome to our workspace. As a Research Intern, "
-                "I'm excited to assist you with the Ada Lovelace agent project. Streamlit is indeed a fantastic "
+                "I'm excited to assist you with the Agentic AI project. Streamlit is indeed a fantastic "
                 "choice for rapid UI prototyping! I will keep these preferences in mind. How can I help you get started today?"
             )
             
@@ -393,7 +393,7 @@ class PersonalAssistantAgent:
         if "what project am i working on" in q_clean or "what is my name" in q_clean or "what ui framework" in q_clean or "recall details" in q_clean or "remember me" in q_clean:
             if memory_enabled and (has_name_insight or memories):
                 name = "Armaan"
-                project = "Ada Lovelace agent project"
+                project = "Agentic AI project"
                 ui = "Streamlit"
                 for ins in insights:
                     if "name is" in ins: name = ins.split("name is ")[-1].replace(".", "")
@@ -493,7 +493,7 @@ if __name__ == "__main__":
     # Test execution
     agent = PersonalAssistantAgent("test_memory")
     print("Testing session 1...")
-    res = agent.run("Hi, I'm Armaan. I'm a research intern working on the Ada Lovelace agent project. I prefer using Streamlit for UI prototypes.", "sess_1")
+    res = agent.run("Hi, I'm Armaan. I'm a research intern working on the Agentic AI project. I prefer using Streamlit for UI prototypes.", "sess_1")
     print(res["response"])
     print("\nInsights after session 1:")
     print(agent.reflection_engine.insights)

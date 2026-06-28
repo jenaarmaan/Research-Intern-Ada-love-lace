@@ -67,7 +67,7 @@ class ContextManager:
             # Fallback local simulation of summary
             summary = (
                 "The conversation started with Armaan (Research Intern) introducing himself "
-                "and his work on the Ada Lovelace agent project. He specified that he prefers Streamlit for UI prototyping "
+                "and his work on the Agentic AI project. He specified that he prefers Streamlit for UI prototyping "
                 "and corrected his database choice from ChromaDB to a NumPy-based vector store to avoid C++ build issues."
             )
             
@@ -119,16 +119,16 @@ class ConceptKnowledgeGraph:
     def _build_default_graph(self):
         # Nodes
         self.graph.add_node("Armaan", type="User", desc="Research Intern")
-        self.graph.add_node("Ada Lovelace", type="Project", desc="Agentic AI Internship Project")
+        self.graph.add_node("Agentic AI", type="Project", desc="Agentic AI Internship Project")
         self.graph.add_node("Streamlit", type="Framework", desc="UI Prototyping framework")
         self.graph.add_node("NumPy Store", type="Database", desc="Lightweight Vector Store")
         
         # Edges
-        self.graph.add_edge("Armaan", "Ada Lovelace", relation="WORK_ON")
+        self.graph.add_edge("Armaan", "Agentic AI", relation="WORK_ON")
         self.graph.add_edge("Armaan", "Streamlit", relation="PREFER_UI")
         self.graph.add_edge("Armaan", "NumPy Store", relation="PREFER_DB")
-        self.graph.add_edge("Ada Lovelace", "Streamlit", relation="FRONTEND")
-        self.graph.add_edge("Ada Lovelace", "NumPy Store", relation="MEMORY_BACKEND")
+        self.graph.add_edge("Agentic AI", "Streamlit", relation="FRONTEND")
+        self.graph.add_edge("Agentic AI", "NumPy Store", relation="MEMORY_BACKEND")
         
     def add_concept(self, source: str, target: str, relation: str):
         self.graph.add_edge(source, target, relation=relation)

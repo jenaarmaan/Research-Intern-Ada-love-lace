@@ -17,7 +17,7 @@ from supporting_code.evaluation import MemoryEvaluator
 
 # Set up Streamlit page configuration
 st.set_page_config(
-    page_title="Ada Lovelace Memory Lab",
+    page_title="Memory Laboratory",
     page_icon="🧠",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -118,7 +118,7 @@ def refresh_agent_states():
 # Header Section
 col_header_left, col_header_right = st.columns([3, 1])
 with col_header_left:
-    st.markdown('<div class="gradient-header">🧠 Ada Lovelace Memory Laboratory</div>', unsafe_allow_html=True)
+    st.markdown('<div class="gradient-header">🧠 Memory Laboratory</div>', unsafe_allow_html=True)
     st.write("Module 3 Lab Dashboard: Vector Episodic Memory, Reflection Engines & Automated Evaluation.")
 with col_header_right:
     st.write("")
@@ -241,7 +241,7 @@ with tab_walkthrough:
         {
             "title": "Session 1: Introduction of Preferences",
             "desc": "The user introduces themselves, their project, and UI framework preference.",
-            "query": "Hi, I'm Armaan. I'm a research intern working on the Ada Lovelace agent project. I prefer using Streamlit for UI prototypes."
+            "query": "Hi, I'm Armaan. I'm a research intern working on the Agentic AI project. I prefer using Streamlit for UI prototypes."
         },
         {
             "title": "Session 2: Knowledge Recall Test",
@@ -482,8 +482,8 @@ with tab_labs:
             max_toks = st.slider("Max Context Token Threshold", 100, 1000, 300)
             
             st.markdown("#### Sample Conversation turns")
-            st.text_area("Turn 1 (User)", "Hi, I'm Armaan. I'm a research intern working on the Ada Lovelace agent project.", key="t1")
-            st.text_area("Turn 2 (Assistant)", "Nice to meet you Armaan. I will assist you with the Ada Lovelace project.", key="t2")
+            st.text_area("Turn 1 (User)", "Hi, I'm Armaan. I'm a research intern working on the Agentic AI project.", key="t1")
+            st.text_area("Turn 2 (Assistant)", "Nice to meet you Armaan. I will assist you with the Agentic AI project.", key="t2")
             st.text_area("Turn 3 (User)", "I prefer using Streamlit for UI prototyping, and we should use a custom NumPy vector store for long-term memory backend to avoid ChromaDB installation issues.", key="t3")
             st.text_area("Turn 4 (Assistant)", "Got it! I will remember to recommend Streamlit and NumPy vector store.", key="t4")
             st.text_area("Turn 5 (User)", "Great! Now, could you summarize our current preferences?", key="t5")
@@ -524,7 +524,7 @@ with tab_labs:
         st.write("Demonstrates how chunks of user profiles are parsed, embedded, and queried in a localized Vector Store.")
         
         showcase_docs = [
-            {"id": "doc_1", "text": "Armaan is a Research Intern working on the Ada Lovelace agent project."},
+            {"id": "doc_1", "text": "Armaan is a Research Intern working on the Agentic AI project."},
             {"id": "doc_2", "text": "The user prefers using Streamlit for rapid UI prototyping."},
             {"id": "doc_3", "text": "To avoid installation blocks on Windows, the user corrected the database backend to a NumPy-based vector store."},
             {"id": "doc_4", "text": "Deep Learning architectures commonly use vector databases to manage conversational episodic streams."}

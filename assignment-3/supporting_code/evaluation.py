@@ -23,13 +23,13 @@ class MemoryEvaluator:
         sessions = [
             {
                 "session_id": "sess_1_intro",
-                "query": "Hi, I'm Armaan. I'm a research intern working on the Ada Lovelace agent project. I prefer using Streamlit for UI prototypes.",
+                "query": "Hi, I'm Armaan. I'm a research intern working on the Agentic AI project. I prefer using Streamlit for UI prototypes.",
                 "expected_recall": []
             },
             {
                 "session_id": "sess_2_recall",
                 "query": "What project am I working on again, and what UI framework do I prefer?",
-                "expected_recall": ["armaan", "ada lovelace", "streamlit"]
+                "expected_recall": ["armaan", "agentic ai", "streamlit"]
             },
             {
                 "session_id": "sess_3_correction",
