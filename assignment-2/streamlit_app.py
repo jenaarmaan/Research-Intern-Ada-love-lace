@@ -184,7 +184,8 @@ def render_documentation():
     """, unsafe_allow_html=True)
     
     st.markdown("### 🎥 Interactive Video Walkthrough")
-    local_video_path = os.path.join(os.path.dirname(__file__), "react_agent_demo.mp4")
+    
+    local_video_path = os.path.join(os.path.dirname(__file__), "react_demo.mp4")
     if os.path.exists(local_video_path):
         st.video(local_video_path)
     else:
