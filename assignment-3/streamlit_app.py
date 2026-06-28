@@ -11,9 +11,9 @@ import matplotlib.pyplot as plt
 # Ensure supporting_code is in the python path
 sys.path.append(os.path.join(os.path.dirname(__file__), "supporting_code"))
 
-from memory_agent import PersonalAssistantAgent, VectorEpisodicMemory, ReflectionEngine, gemini_available, api_key
-from lab_runners import ContextManager, VectorMemoryShowcase, ConceptKnowledgeGraph
-from evaluation import MemoryEvaluator
+from supporting_code.memory_agent import PersonalAssistantAgent, VectorEpisodicMemory, ReflectionEngine, gemini_available, api_key
+from supporting_code.lab_runners import ContextManager, VectorMemoryShowcase, ConceptKnowledgeGraph
+from supporting_code.evaluation import MemoryEvaluator
 
 # Set up Streamlit page configuration
 st.set_page_config(
