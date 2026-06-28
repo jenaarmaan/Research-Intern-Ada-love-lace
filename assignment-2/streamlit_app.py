@@ -184,13 +184,17 @@ def render_documentation():
     """, unsafe_allow_html=True)
     
     st.markdown("### 🎥 Interactive Video Walkthrough")
-    st.components.v1.html(
-        """
-        <iframe width="100%" height="450" src="https://app.heygen.com/embeds/7941197f056947d5906dea837444df1e" title="HeyGen video player" frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen style="border-radius:12px; border:1px solid #2d313f;"></iframe>
-        """,
-        height=470
-    )
-    st.markdown("[🔗 View Sharable Link on HeyGen](https://app.heygen.com/videos/react-agent-sandbox-explorer-demo-7941197f056947d5906dea837444df1e)")
+    local_video_path = os.path.join(os.path.dirname(__file__), "react_agent_demo.mp4")
+    if os.path.exists(local_video_path):
+        st.video(local_video_path)
+    else:
+        st.components.v1.html(
+            """
+            <iframe width="100%" height="450" src="https://app.heygen.com/embeds/7941197f056947d5906dea837444df1e" title="HeyGen video player" frameborder="0" allow="encrypted-media; fullscreen;" allowfullscreen style="border-radius:12px; border:1px solid #2d313f;"></iframe>
+            """,
+            height=470
+        )
+        st.markdown("[🔗 View Sharable Link on HeyGen](https://app.heygen.com/videos/react-agent-sandbox-explorer-demo-7941197f056947d5906dea837444df1e)")
     st.write("")
     
     col_doc_left, col_doc_right = st.columns([1, 1])
