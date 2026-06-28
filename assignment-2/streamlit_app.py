@@ -151,6 +151,134 @@ st.sidebar.markdown(
 
 st.sidebar.markdown("---")
 
+# Navigation Selector
+view_sel = st.sidebar.radio(
+    "🧭 Navigation View", 
+    ["🎮 Sandbox Playground", "📖 User Manual & Docs"],
+    index=0
+)
+
+st.sidebar.markdown("---")
+
+def render_documentation():
+    st.markdown('<div class="main-title">📚 ReAct Agent System User Manual</div>', unsafe_allow_html=True)
+    st.write("Module 2 Lab System: Dynamic Reasoning & Re-planning on Execution Failures.")
+    st.write("")
+    
+    st.markdown("""
+    <div class="glass-panel" style="margin-bottom: 25px; border-left: 5px solid #00f0ff;">
+        <h4 style="color: #00f0ff; margin-top: 0; font-family: 'Outfit';">🚀 System Quickstart Guide</h4>
+        <p style="color: #cbd5e1; font-size: 0.95rem; line-height:1.6;">
+            Welcome to the <strong>ReAct (Reason + Act) Agent Explorer</strong>. This system simulates a dynamic, 
+            self-healing AI agent equipped with external tool utilities (Search, Web Scrape, Python Exec REPL) 
+            running in a secure sandbox. Follow these simple steps to explore:
+        </p>
+        <ol style="color: #cbd5e1; font-size: 0.92rem; padding-left: 20px; line-height:1.6;">
+            <li><strong>Select a Benchmark</strong>: Pick one of the pre-built test cases in the sidebar on the left.</li>
+            <li><strong>Inspect the Prompt</strong>: Look at the task query loaded into the input box.</li>
+            <li><strong>Run the Engine</strong>: Click <em>"Run ReAct Agent Engine"</em> or <em>"Run Selected Benchmark"</em>.</li>
+            <li><strong>Observe Cognitive Cycle</strong>: Watch the real-time node transitions on the left (Standby ➔ Thought ➔ Action ➔ Observe ➔ Finish).</li>
+            <li><strong>Review Trace Logs</strong>: Inspect the detailed step-by-step logs inside the interactive terminal on the right.</li>
+        </ol>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col_doc_left, col_doc_right = st.columns([1, 1])
+    
+    with col_doc_left:
+        st.markdown("""
+        <div class="glass-panel" style="min-height: 400px; margin-bottom: 20px;">
+            <h4 style="color: #00f0ff; margin-top: 0; font-family: 'Outfit';">🧠 The ReAct Architecture Loop</h4>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5;">
+                The agent operates in a continuous loop alternating between reasoning analysis (Thoughts) and execution actions (Actions):
+            </p>
+            <div style="background-color: #1a1e26; padding: 12px; border-radius: 6px; font-family: 'JetBrains Mono'; font-size: 0.8rem; color: #a6accd; border: 1px solid #2d313f; margin-bottom: 15px;">
+                Loop Iteration:<br>
+                1. <strong>THOUGHT</strong>: Analyze goal, deduce current requirements, and formulate plan.<br>
+                2. <strong>ACTION</strong>: Select appropriate tool (Search/Scrape/REPL) with parsed argument parameters.<br>
+                3. <strong>OBSERVATION</strong>: Capture results of tool execution (data feed, shell stdout, error output).<br>
+                4. <strong>REFINE</strong>: If goal accomplished, output final answer (FINISH). Else, repeat loop.
+            </div>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5;">
+                Unlike standard linear pipelines, the ReAct loop allows the agent to check intermediate results and make informed decisions on the next steps based on real-time observations.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="glass-panel" style="min-height: 320px;">
+            <h4 style="color: #ff4b4b; margin-top: 0; font-family: 'Outfit';">⚠️ Dynamic Re-planning on Failure</h4>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5;">
+                A primary innovation of this sandbox is its <strong>Self-Healing Loop Control</strong>. When a step encounters an exception or invalid state:
+            </p>
+            <ul style="color: #cbd5e1; font-size: 0.9rem; padding-left: 20px; line-height: 1.5;">
+                <li>The agent intercepts the traceback or error response (e.g. <em>ZeroDivisionError</em>, <em>HTTP Scrape Timeout</em>, or <em>Empty Parameters</em>).</li>
+                <li>Instead of crashing, it invokes the <strong>Re-planner</strong> module.</li>
+                <li>The Re-planner inserts a corrective step (such as changing python variables or switching to mirror scrape URL endpoints) and updates the active execution plan.</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    with col_doc_right:
+        st.markdown("""
+        <div class="glass-panel" style="min-height: 400px; margin-bottom: 20px;">
+            <h4 style="color: #ffd700; margin-top: 0; font-family: 'Outfit';">🛠️ Sandboxed System Tools</h4>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.5;">
+                The agent is equipped with three custom-engineered tool functions:
+            </p>
+            <ol style="color: #cbd5e1; font-size: 0.9rem; padding-left: 20px; line-height: 1.5;">
+                <li style="margin-bottom: 8px;">
+                    <strong>Wikipedia Search Tool</strong>:<br>
+                    <span style="font-size: 0.85rem; color: #8892b0;">Simulates information retrieval. Checks exact queries against a mock fact database (e.g. population metrics, revenue records). Handles empty query corrections.</span>
+                </li>
+                <li style="margin-bottom: 8px;">
+                    <strong>Web Scraper</strong>:<br>
+                    <span style="font-size: 0.85rem; color: #8892b0;">Retrieves raw webpage content. Simulates stateful web retry logic. If the primary domain fails (e.g. flaky-database.api), the agent switches to fallback mirror mirrors.</span>
+                </li>
+                <li style="margin-bottom: 8px;">
+                    <strong>Safe Python REPL Sandbox</strong>:<br>
+                    <span style="font-size: 0.85rem; color: #8892b0;">Runs Python computation. Wraps variable scopes in isolated namespaces, catches standard math or syntax errors, and enables self-repair variables on the fly.</span>
+                </li>
+            </ol>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="glass-panel" style="min-height: 320px;">
+            <h4 style="color: #00ff66; margin-top: 0; font-family: 'Outfit';">📊 Sandbox Specifications</h4>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; color: #cbd5e1; margin-top: 10px;">
+                <tr style="border-bottom: 1px solid #2d313f;">
+                    <th style="text-align: left; padding: 6px 0; color: #8892b0;">Specification</th>
+                    <th style="text-align: left; padding: 6px 0; color: #8892b0;">Value</th>
+                </tr>
+                <tr style="border-bottom: 1px solid #2d313f;">
+                    <td style="padding: 6px 0;">Python Sandbox Engine</td>
+                    <td style="padding: 6px 0; color: #00ff66;">Isolated scope REPL execution</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #2d313f;">
+                    <td style="padding: 6px 0;">Scraper Resilience</td>
+                    <td style="padding: 6px 0; color: #00ff66;">Mirror fallback failover handler</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #2d313f;">
+                    <td style="padding: 6px 0;">Max Loop Guardrails</td>
+                    <td style="padding: 6px 0; color: #ff9900;">10 Iteration timeout protection</td>
+                </tr>
+                <tr>
+                    <td style="padding: 6px 0;">Command Line Mode</td>
+                    <td style="padding: 6px 0; color: #00f0ff;"><code>python run_5_tests.py</code></td>
+                </tr>
+            </table>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    st.write("")
+    st.info("💡 Pro-Tip: Switch to the 'Sandbox Playground' view in the navigation sidebar to test these concepts interactively.")
+
+if view_sel == "📖 User Manual & Docs":
+    render_documentation()
+    st.stop()
+
+
 # Load default benchmark cases from agent's determine task flow mappings
 default_cases = [
     {
